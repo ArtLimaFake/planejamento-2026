@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Hoje</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap');
+
+:root {
+  --bg:#0d0f14;--surface:#141720;--surface2:#1c2030;--border:#252a3a;
+  --accent:#f0c040;--accent2:#4fd1a0;--accent3:#f07070;--accent4:#7090f0;
+  --text:#e8eaf0;--muted:#7880a0;--danger:#f05060;--warn:#f0a040;--invest:#f0d080;
+  --radius:12px;--radius-sm:8px;
+}
+[data-theme="light"] {
+  --bg:#f2f3f7;--surface:#ffffff;--surface2:#eaecf4;--border:#d0d4e4;
+  --accent:#b08000;--accent2:#1a9e72;--accent3:#c03040;--accent4:#3060d0;
+  --text:#14182a;--muted:#5868a0;--danger:#c02030;--warn:#b06000;--invest:#806000;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{min-height:100vh;background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;}
+
+/* header */
+.top-bar{
+  position:sticky;top:0;z-index:100;
+  background:var(--bg);border-bottom:1px solid var(--border);
+  padding:12px 16px 10px;
+  display:flex;flex-direction:column;gap:4px;
+}
+.top-row{display:flex;justify-content:space-between;align-items:center;}
+.top-bar h1{font-size:1.25rem;font-weight:800;color:var(--accent);letter-spacing:-0.5px;}
+.top-weekday{font-size:1.35rem;font-weight:800;color:var(--text);letter-spacing:-0.5px;line-height:1.1;}
+.top-date{font-family:'Space Mono',monospace;font-size:0.68rem;color:var(--muted);}
+.clock-row{margin-top:8px;padding-top:8px;border-top:1px solid var(--border);}
+.clock-wrap{display:flex;align-items:center;gap:8px;}
+.clock-time{font-family:'Space Mono',monospace;font-size:1.6rem;font-weight:700;color:var(--accent);letter-spacing:-1px;line-height:1;}
+.clock-sep{color:var(--border);font-size:1rem;}
+.clock-current{font-size:0.82rem;font-weight:700;color:var(--text);line-height:1;}
+.clock-next{font-size:0.7rem;color:var(--muted);margin-top:3px;font-family:'Space Mono',monospace;}
+.phase-badge{
+  display:inline-block;padding:3px 10px;border-radius:20px;
+  font-family:'Space Mono',monospace;font-size:0.65rem;font-weight:700;
+  border:1px solid;
+}
+.phase-badge.f1{border-color:var(--danger);color:var(--danger);}
+.phase-badge.f2{border-color:var(--warn);color:var(--warn);}
+.phase-badge.f3{border-color:var(--accent);color:var(--accent);}
+.phase-badge.f4{border-color:var(--accent2);color:var(--accent2);}
+.phase-badge.f5{border-color:var(--accent4);color:var(--accent4);}
+
+.theme-btn{
+  background:var(--surface2);border:1px solid var(--border);
+  color:var(--muted);border-radius:20px;padding:4px 12px;
+  font-family:'Space Mono',monospace;font-size:0.65rem;cursor:pointer;
+}
+
+/* progress bar */
+.progress-wrap{padding:10px 16px 0;}
+.progress-label{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--muted);margin-bottom:5px;}
+.progress-track{height:5px;background:var(--surface2);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--accent2);border-radius:3px;transition:width .4s ease;}
+
+/* day nav */
+.day-nav{display:flex;gap:6px;padding:12px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.day-nav::-webkit-scrollbar{display:none;}
+.day-pill{
+  flex-shrink:0;padding:5px 12px;border-radius:20px;
+  font-family:'Space Mono',monospace;font-size:0.65rem;cursor:pointer;
+  border:1px solid var(--border);background:var(--surface);color:var(--muted);
+  transition:all .15s;
+}
+.day-pill.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700;}
+.day-pill.today{border-color:var(--accent2);color:var(--accent2);}
+.day-pill.today.active{background:var(--accent);color:#000;border-color:var(--accent);}
+
+/* blocks list */
+.blocks{padding:0 16px 100px;}
+
+.block-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  margin-bottom:8px;overflow:hidden;transition:border-color .15s;
+}
+.block-card.done{border-color:var(--accent2);opacity:0.75;}
+.block-card.skipped{border-color:var(--danger);opacity:0.7;}
+.block-card.swapped{border-color:var(--warn);}
+
+.block-header{
+  display:flex;align-items:center;gap:10px;padding:11px 12px;cursor:pointer;
+}
+.block-time{
+  font-family:'Space Mono',monospace;font-size:0.62rem;color:var(--muted);
+  min-width:80px;flex-shrink:0;line-height:1.4;
+}
+.block-main{flex:1;min-width:0;}
+.block-label{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:5px;margin-bottom:3px;
+}
+.block-note{font-size:0.72rem;color:var(--muted);line-height:1.4;word-break:break-word;}
+.block-swap-note{font-size:0.71rem;color:var(--warn);line-height:1.4;margin-top:4px;font-style:italic;}
+
+.status-dot{
+  width:22px;height:22px;border-radius:50%;
+  border:2px solid var(--border);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;transition:all .15s;cursor:pointer;
+}
+.status-dot.done{background:var(--accent2);border-color:var(--accent2);color:#000;}
+.status-dot.skipped{background:var(--danger);border-color:var(--danger);color:#fff;}
+.status-dot.swapped{background:var(--warn);border-color:var(--warn);color:#000;}
+
+/* action sheet */
+.action-sheet-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;
+  align-items:flex-end;
+}
+.action-sheet-overlay.open{display:flex;}
+.action-sheet{
+  background:var(--surface);border-radius:20px 20px 0 0;
+  width:100%;padding:16px 16px 32px;
+  border-top:1px solid var(--border);
+}
+.sheet-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px;}
+.sheet-title{font-size:0.75rem;font-family:'Space Mono',monospace;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;}
+.sheet-block-name{font-size:1rem;font-weight:700;margin-bottom:16px;color:var(--accent);}
+
+.sheet-btn{
+  display:flex;align-items:center;gap:12px;
+  width:100%;padding:13px 14px;border-radius:var(--radius-sm);
+  border:1px solid var(--border);background:var(--surface2);
+  color:var(--text);font-family:'Syne',sans-serif;font-size:0.88rem;
+  margin-bottom:8px;cursor:pointer;text-align:left;
+  transition:all .15s;
+}
+.sheet-btn:active{opacity:.7;}
+.sheet-btn .btn-icon{font-size:1.1rem;width:28px;text-align:center;}
+.sheet-btn.btn-done{border-color:var(--accent2);color:var(--accent2);}
+.sheet-btn.btn-skip{border-color:var(--danger);color:var(--danger);}
+.sheet-btn.btn-swap{border-color:var(--warn);color:var(--warn);}
+.sheet-btn.btn-undo{border-color:var(--border);color:var(--muted);}
+
+.swap-area{display:none;flex-direction:column;gap:8px;margin-top:4px;}
+.swap-area.open{display:flex;}
+.swap-input{
+  width:100%;padding:10px 12px;border-radius:var(--radius-sm);
+  background:var(--surface2);border:1px solid var(--border);
+  color:var(--text);font-family:'Syne',sans-serif;font-size:0.88rem;
+}
+.swap-input::placeholder{color:var(--muted);}
+.swap-confirm{
+  padding:10px;border-radius:var(--radius-sm);
+  background:var(--warn);color:#000;font-weight:700;font-size:0.85rem;
+  border:none;cursor:pointer;font-family:'Syne',sans-serif;
+}
+
+/* label colors */
+.lbl-trabalho{background:#1a2535;color:#6090d0;}
+.lbl-concurso{background:#2a1a1a;color:#f07070;}
+.lbl-rinha{background:#1a2520;color:#50d090;}
+.lbl-ingles{background:#251a10;color:#f0a040;}
+.lbl-descanso{background:#1a1a25;color:#8080c0;}
+.lbl-livre{background:#1a2020;color:#60a090;}
+.lbl-cardio{background:#202510;color:#90c050;}
+.lbl-mobilidade{background:#181f06;color:#70a030;}
+.lbl-treino{background:#202808;color:#b0d040;}
+.lbl-sono{background:#151520;color:#606090;}
+.lbl-tcc{background:#251525;color:#c070c0;}
+.lbl-cert{background:#201520;color:#b060d0;}
+.lbl-familia{background:#201a25;color:#d090f0;}
+.lbl-invest{background:#201800;color:#f0d080;}
+.lbl-checkin{background:#181820;color:#9090c0;}
+.lbl-afc{background:#152020;color:#60c0b0;}
+.lbl-carreira{background:#151a25;color:#80a0e0;}
+.lbl-pausa{background:#181818;color:#707070;}
+.lbl-lanche{background:#1a1510;color:#c09060;}
+.lbl-almoco{background:#1a1208;color:#d0a060;}
+.lbl-redacao{background:#2a1515;color:#f09090;}
+.lbl-trajeto{background:#101520;color:#506080;}
+
+[data-theme="light"] .lbl-trabalho{background:#e8f0ff;color:#2050b0;}
+[data-theme="light"] .lbl-concurso{background:#ffe8e8;color:#b02030;}
+[data-theme="light"] .lbl-rinha{background:#e8fff4;color:#1a7050;}
+[data-theme="light"] .lbl-ingles{background:#fff4e8;color:#904010;}
+[data-theme="light"] .lbl-descanso{background:#f0f0ff;color:#504090;}
+[data-theme="light"] .lbl-livre{background:#eefff8;color:#207050;}
+[data-theme="light"] .lbl-cardio{background:#f0ffe0;color:#407010;}
+[data-theme="light"] .lbl-mobilidade{background:#eeffd8;color:#305010;}
+[data-theme="light"] .lbl-treino{background:#f4ffd0;color:#506010;}
+[data-theme="light"] .lbl-sono{background:#f0f0f8;color:#404070;}
+[data-theme="light"] .lbl-tcc{background:#fce8ff;color:#801090;}
+[data-theme="light"] .lbl-cert{background:#f8e8ff;color:#6010a0;}
+[data-theme="light"] .lbl-familia{background:#f8f0ff;color:#7030c0;}
+[data-theme="light"] .lbl-invest{background:#fff8d0;color:#705000;}
+[data-theme="light"] .lbl-checkin{background:#f0f0f8;color:#505090;}
+[data-theme="light"] .lbl-afc{background:#e8fff8;color:#106050;}
+[data-theme="light"] .lbl-carreira{background:#e8f0ff;color:#204080;}
+[data-theme="light"] .lbl-pausa{background:#f4f4f4;color:#505050;}
+[data-theme="light"] .lbl-lanche{background:#fff8f0;color:#804020;}
+[data-theme="light"] .lbl-almoco{background:#fff4e8;color:#905020;}
+[data-theme="light"] .lbl-redacao{background:#ffe8e8;color:#901030;}
+[data-theme="light"] .lbl-trajeto{background:#e8eef8;color:#304060;}
+
+/* summary footer */
+.summary-bar{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--bg);border-top:1px solid var(--border);
+  padding:10px 16px 20px;
+  display:flex;gap:10px;justify-content:space-around;
+}
+.sum-item{text-align:center;}
+.sum-num{font-family:'Space Mono',monospace;font-size:1.1rem;font-weight:700;}
+.sum-num.done-num{color:var(--accent2);}
+.sum-num.skip-num{color:var(--danger);}
+.sum-num.swap-num{color:var(--warn);}
+.sum-num.pending-num{color:var(--muted);}
+.sum-label{font-size:0.62rem;color:var(--muted);font-family:'Space Mono',monospace;}
+
+/* empty */
+.empty-msg{text-align:center;padding:40px 20px;color:var(--muted);font-size:0.85rem;line-height:1.7;}
+.current-block{border-color:var(--accent) !important;box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 25%,transparent);}
+.current-block .block-time{color:var(--accent);}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-row">
+    <div>
+      <div class="top-weekday" id="top-weekday">—</div>
+      <div class="top-date" id="today-label">—</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span class="phase-badge" id="phase-badge">—</span>
+      <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">☀</button>
+    </div>
+  </div>
+  <div class="clock-row">
+    <div class="clock-wrap">
+      <span class="clock-time" id="clock-time">--:--</span>
+      <span class="clock-sep">·</span>
+      <span class="clock-current" id="clock-current">—</span>
+    </div>
+    <div class="clock-next" id="clock-next"></div>
+  </div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span id="prog-label">0 de 0 tarefas</span>
+    <span id="prog-pct">0%</span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+
+<div class="day-nav" id="day-nav"></div>
+
+<div class="blocks" id="blocks-list"></div>
+
+<div class="summary-bar">
+  <div class="sum-item"><div class="sum-num done-num" id="s-done">0</div><div class="sum-label">feitas</div></div>
+  <div class="sum-item"><div class="sum-num skip-num" id="s-skip">0</div><div class="sum-label">puladas</div></div>
+  <div class="sum-item"><div class="sum-num swap-num" id="s-swap">0</div><div class="sum-label">trocadas</div></div>
+  <div class="sum-item"><div class="sum-num pending-num" id="s-pend">0</div><div class="sum-label">pendentes</div></div>
+</div>
+
+<div class="action-sheet-overlay" id="overlay" onclick="closeSheet(event)">
+  <div class="action-sheet" id="action-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">marcar bloco</div>
+    <div class="sheet-block-name" id="sheet-block-name">—</div>
+    <button class="sheet-btn btn-done" onclick="setStatus('done')"><span class="btn-icon">✓</span> Feita</button>
+    <button class="sheet-btn btn-skip" onclick="setStatus('skipped')"><span class="btn-icon">✕</span> Não fiz</button>
+    <button class="sheet-btn btn-swap" onclick="openSwap()"><span class="btn-icon">⇄</span> Troquei por outra coisa</button>
+    <div class="swap-area" id="swap-area">
+      <input class="swap-input" type="text" id="swap-input" placeholder="O que você fez no lugar?" maxlength="120">
+      <button class="swap-confirm" onclick="confirmSwap()">Confirmar troca</button>
+    </div>
+    <button class="sheet-btn btn-undo" onclick="setStatus(null)" style="margin-top:4px;"><span class="btn-icon">↩</span> Desfazer</button>
+  </div>
+</div>
+
+<script>
+const PHASE_RANGES = [
+  {id:'f1', label:'Fase 1', cls:'f1', start:'2026-05-23', end:'2026-06-05'},
+  {id:'f2', label:'Fase 2', cls:'f2', start:'2026-06-06', end:'2026-07-05'},
+  {id:'f3', label:'Fase 3', cls:'f3', start:'2026-07-06', end:'2026-08-09'},
+  {id:'f4', label:'Fase 4', cls:'f4', start:'2026-08-10', end:'2026-12-14'},
+  {id:'f5', label:'Fase 5', cls:'f5', start:'2026-12-15', end:'2027-12-31'},
+];
+
+const DAYS = {
+  f1: {
+    'seg-qua': [
+      {time:'06:00–06:20', label:'Mobilidade', cls:'mobilidade', note:'Alongamento, mobilidade articular. Ativa o corpo antes do dia longo.'},
+      {time:'06:20–06:30', label:'Preparo saída', cls:'pausa', note:''},
+      {time:'06:30–08:00', label:'Concurso passivo', cls:'concurso', note:'Áudio das aulas no fone durante o trajeto.'},
+      {time:'08:00–10:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'10:00–10:15', label:'Lanche', cls:'lanche', note:''},
+      {time:'10:15–12:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'12:00–13:00', label:'Almoço', cls:'almoco', note:''},
+      {time:'13:00–15:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'15:00–15:15', label:'Lanche', cls:'lanche', note:''},
+      {time:'15:15–17:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'17:00–19:30', label:'Trajeto volta', cls:'trajeto', note:'Descompressão: música, podcast de entretenimento ou silêncio. Nada de aulas.'},
+      {time:'19:30–20:15', label:'Jantar', cls:'almoco', note:'Refeição tranquila, sem tela de estudo.'},
+      {time:'20:15–21:15', label:'Concurso', cls:'concurso', note:'1h leve — apostilas ou revisão. Nada de vídeo novo.'},
+      {time:'21:15+', label:'Descanso', cls:'sono', note:'Tela escura. Dia mais pesado da semana.'},
+    ],
+    'ter': [
+      {time:'07:00–07:30', label:'TCC · leitura', cls:'tcc', note:'30 min fichamento ou leitura bibliográfica — mente fresca.'},
+      {time:'07:30–08:00', label:'Concurso', cls:'concurso', note:'30 min vídeo-aula — aquece para o dia.'},
+      {time:'08:00–10:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'10:00–10:15', label:'Lanche', cls:'lanche', note:'+5 min olhar B3 se tiver algo relevante (mercado aberto desde 10h).'},
+      {time:'10:15–12:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'12:00–12:30', label:'Almoço', cls:'almoco', note:''},
+      {time:'12:30–13:00', label:'Cardio', cls:'cardio', note:'30 min — caminhada rápida, ciclismo, jumping jacks ou pular corda.'},
+      {time:'13:00–15:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'15:00–15:15', label:'Lanche', cls:'lanche', note:'+5 min checar B3 se necessário.'},
+      {time:'15:15–17:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'17:00–17:20', label:'Pausa obrigatória', cls:'pausa', note:'Levanta da cadeira, água, ar. Transição entre modos.'},
+      {time:'17:20–19:20', label:'Concurso', cls:'concurso', note:'2h vídeo-aulas — bloco principal do dia.'},
+      {time:'19:20–20:00', label:'Jantar', cls:'almoco', note:''},
+      {time:'20:00–21:30', label:'Rinha de Backend', cls:'rinha', note:'1,5h hiperfoco — Java Spring Boot, otimização de recursos.'},
+      {time:'21:30+', label:'Descanso', cls:'sono', note:''},
+    ],
+    'qui': [
+      {time:'07:00–07:30', label:'TCC · leitura', cls:'tcc', note:'30 min fichamento ou leitura bibliográfica.'},
+      {time:'07:30–08:00', label:'Concurso', cls:'concurso', note:'30 min revisão do dia anterior.'},
+      {time:'08:00–10:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'10:00–10:15', label:'Lanche', cls:'lanche', note:'+checar B3 rapidamente.'},
+      {time:'10:15–12:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'12:00–12:30', label:'Almoço', cls:'almoco', note:''},
+      {time:'12:30–13:00', label:'Cardio', cls:'cardio', note:'30 min — mesmo protocolo da terça.'},
+      {time:'13:00–15:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'15:00–15:15', label:'Lanche', cls:'lanche', note:''},
+      {time:'15:15–17:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'17:00–17:20', label:'Pausa obrigatória', cls:'pausa', note:''},
+      {time:'17:20–20:00', label:'Concurso', cls:'concurso', note:'2,5h — maior bloco da semana, vídeo-aulas principais.'},
+      {time:'20:00–20:40', label:'Jantar', cls:'almoco', note:''},
+      {time:'20:40–22:00', label:'Rinha de Backend', cls:'rinha', note:'1,2h — revisão ou testes de performance.'},
+      {time:'22:00+', label:'Descanso', cls:'sono', note:''},
+    ],
+    'sex': [
+      {time:'07:00–07:30', label:'TCC · leitura', cls:'tcc', note:'30 min — fecha a semana de fichamentos.'},
+      {time:'07:30–08:00', label:'Concurso', cls:'concurso', note:'30 min revisão rápida.'},
+      {time:'08:00–10:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'10:00–10:15', label:'Lanche', cls:'lanche', note:''},
+      {time:'10:15–12:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'12:00–12:30', label:'Almoço', cls:'almoco', note:''},
+      {time:'12:30–13:00', label:'Cardio', cls:'cardio', note:'30 min — última sessão da semana.'},
+      {time:'13:00–15:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'15:00–15:15', label:'Lanche', cls:'lanche', note:''},
+      {time:'15:15–17:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'17:00–18:00', label:'Descompressão', cls:'descanso', note:'Série, jogo casual, vídeo — transição para o fim de semana. Sem estudo.'},
+      {time:'18:00–19:00', label:'Concurso', cls:'concurso', note:'1h apostilas ou questões — ritmo mais leve.'},
+      {time:'19:00+', label:'Livre', cls:'livre', note:'Sexta à noite é sagrada.'},
+    ],
+    'sab': [
+      {time:'07:15–08:00', label:'Treino', cls:'treino', note:'45 min antes da aula — treino mais intenso da semana.'},
+      {time:'08:00–10:30', label:'Inglês · aula', cls:'ingles', note:'Fixo e inegociável toda semana.'},
+      {time:'10:30–12:30', label:'Rinha de Backend', cls:'rinha', note:'2h hiperfoco — aproveita o estado mental da manhã.'},
+      {time:'12:30–13:30', label:'Almoço', cls:'almoco', note:''},
+      {time:'13:30–17:00', label:'Concurso', cls:'concurso', note:'3,5h — maior bloco da semana.'},
+      {time:'17:00+', label:'Família / Lazer', cls:'familia', note:'Cinema, restaurante, passeio — sem culpa.'},
+    ],
+    'dom': [
+      {time:'até 09:00', label:'Dormir', cls:'sono', note:'Sem alarme.'},
+      {time:'09:00–09:15', label:'Check-in semanal', cls:'checkin', note:'Horas estudadas, o que cobriu no TCC, o que cobre na semana seguinte.'},
+      {time:'09:15–11:15', label:'Investimentos · S1', cls:'invest', note:'Diagnóstico dos CDBs: listar todos, taxas, vencimentos, cobertura FGC.'},
+      {time:'11:15–12:15', label:'Rinha de Backend', cls:'rinha', note:'1h sprint final — última funcionalidade ou correção.'},
+      {time:'12:15–13:15', label:'Treino', cls:'treino', note:'1h — caminhada longa, yoga, ou qualquer atividade prazerosa.'},
+      {time:'13:15+', label:'Descanso · família', cls:'familia', note:'Jogo, série, almoço em família — recarrega para a semana.'},
+    ],
+  },
+  f2: {
+    'seg-qua': [
+      {time:'06:00–06:20', label:'Mobilidade', cls:'mobilidade', note:'Alongamento, mobilidade articular.'},
+      {time:'06:20–06:30', label:'Preparo saída', cls:'pausa', note:''},
+      {time:'06:30–08:00', label:'Concurso passivo', cls:'concurso', note:'Áudio das aulas no trajeto — material de menor densidade cognitiva.'},
+      {time:'08:00–10:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'10:00–10:15', label:'Lanche', cls:'lanche', note:''},
+      {time:'10:15–12:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'12:00–13:00', label:'Almoço', cls:'almoco', note:''},
+      {time:'13:00–15:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'15:00–15:15', label:'Lanche', cls:'lanche', note:''},
+      {time:'15:15–17:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'17:00–19:30', label:'Trajeto volta', cls:'trajeto', note:'Descompressão: música, podcast, ou silêncio. Não é estudo.'},
+      {time:'19:30–20:15', label:'Jantar tranquilo', cls:'almoco', note:''},
+      {time:'20:15–21:15', label:'Concurso', cls:'concurso', note:'1h apostilas ou revisão. Últimos 15 dias: redação dissertativo-argumentativa.'},
+      {time:'21:15+', label:'Descanso', cls:'sono', note:''},
+    ],
+    'ter-qui': [
+      {time:'07:00–07:30', label:'TCC · leitura', cls:'tcc', note:'30 min fichamento — acumulando referências para a Fase 3.'},
+      {time:'07:30–08:00', label:'Concurso', cls:'concurso', note:'30 min vídeo-aulas.'},
+      {time:'08:00–10:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'10:00–10:15', label:'Lanche', cls:'lanche', note:'+checar B3 (mercado aberto) — máx 5 min.'},
+      {time:'10:15–12:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'12:00–12:30', label:'Almoço', cls:'almoco', note:''},
+      {time:'12:30–13:00', label:'Cardio', cls:'cardio', note:'30 min — caminhada, ciclismo, pular corda, HIIT leve.'},
+      {time:'13:00–15:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'15:00–15:15', label:'Lanche', cls:'lanche', note:'+checar B3 se necessário.'},
+      {time:'15:15–17:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'17:00–17:20', label:'Pausa obrigatória', cls:'pausa', note:'Levanta, água, ar fresco. Transição entre modos de atenção.'},
+      {time:'17:20–20:00', label:'Concurso', cls:'concurso', note:'2,5h — vídeo-aulas ou apostilas. Últimos 15 dias: 1h redação + 1,5h questões.'},
+      {time:'20:00–21:00', label:'Livre', cls:'livre', note:'1h jogo, série, YouTube — recuperação mental. Necessário.'},
+      {time:'21:00+', label:'Descanso', cls:'sono', note:''},
+    ],
+    'sex': [
+      {time:'07:00–07:30', label:'TCC · leitura', cls:'tcc', note:'30 min — último fichamento da semana.'},
+      {time:'07:30–08:00', label:'Concurso', cls:'concurso', note:'30 min revisão rápida.'},
+      {time:'08:00–10:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'10:00–10:15', label:'Lanche', cls:'lanche', note:''},
+      {time:'10:15–12:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'12:00–12:30', label:'Almoço', cls:'almoco', note:''},
+      {time:'12:30–13:00', label:'Cardio', cls:'cardio', note:'30 min — encerra o ciclo de cardio da semana.'},
+      {time:'13:00–15:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'15:00–15:15', label:'Lanche', cls:'lanche', note:''},
+      {time:'15:15–17:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'17:00–18:00', label:'Descompressão', cls:'descanso', note:'Série, jogo casual, redes sociais. Transição real para o fim de semana.'},
+      {time:'18:00–19:00', label:'Concurso', cls:'concurso', note:'1h apostilas ou questões — ritmo mais leve.'},
+      {time:'19:00+', label:'Livre', cls:'livre', note:'Sexta à noite é sagrada.'},
+    ],
+    'sab': [
+      {time:'07:15–08:00', label:'Treino intenso', cls:'treino', note:'45 min — academia, HIIT, corrida. Endorfina antes da aula.'},
+      {time:'08:00–10:30', label:'Inglês · aula', cls:'ingles', note:'Fixo e inegociável.'},
+      {time:'10:30–12:00', label:'Redação', cls:'redacao', note:'1,5h — treina toda semana da Fase 2. Estrutura dissertativo-argumentativa fixa.'},
+      {time:'12:00–13:00', label:'Almoço', cls:'almoco', note:''},
+      {time:'13:00–17:00', label:'Concurso', cls:'concurso', note:'4h — vídeo-aulas ou apostilas. Últimos 15 dias: 2h questões + 2h revisão.'},
+      {time:'17:00+', label:'Família / Lazer', cls:'familia', note:''},
+    ],
+    'dom': [
+      {time:'até 09:00', label:'Dormir', cls:'sono', note:''},
+      {time:'09:00–09:15', label:'Check-in semanal', cls:'checkin', note:'Horas estudadas, conteúdo coberto, ajuste da próxima semana.'},
+      {time:'09:15–11:15', label:'Investimentos', cls:'invest', note:'S2: renda variável · S3: montar carteira · S4: abrir corretora e executar.'},
+      {time:'11:15–12:15', label:'Concurso', cls:'concurso', note:'1h revisão ou questões.'},
+      {time:'12:15–13:15', label:'Treino', cls:'treino', note:'1h — caminhada longa, yoga, natação.'},
+      {time:'13:15+', label:'Descanso · família', cls:'familia', note:''},
+    ],
+  },
+  f3: {
+    'seg-qua': [
+      {time:'06:00–06:20', label:'Mobilidade', cls:'mobilidade', note:''},
+      {time:'06:30–08:00', label:'Certificação passiva', cls:'cert', note:'Áudio de aulas técnicas no trajeto.'},
+      {time:'08:00–10:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'10:00–10:15', label:'Lanche', cls:'lanche', note:''},
+      {time:'10:15–12:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'12:00–13:00', label:'Almoço', cls:'almoco', note:''},
+      {time:'13:00–15:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'15:00–15:15', label:'Lanche', cls:'lanche', note:''},
+      {time:'15:15–17:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'17:00–19:30', label:'Trajeto volta', cls:'trajeto', note:'Descompressão — podcast de entretenimento, música, silêncio.'},
+      {time:'19:30–20:15', label:'Jantar', cls:'almoco', note:''},
+      {time:'20:15–21:45', label:'TCC 2 · escrita', cls:'tcc', note:'1,5h — escrita ou pesquisa. Aproveita os fichamentos das Fases 1 e 2.'},
+      {time:'21:45+', label:'Descanso', cls:'sono', note:''},
+    ],
+    'ter-qui': [
+      {time:'07:00–08:00', label:'TCC 2 · escrita', cls:'tcc', note:'1h antes do trabalho — mente fresca é ouro para escrita acadêmica.'},
+      {time:'08:00–10:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'10:00–10:15', label:'Lanche', cls:'lanche', note:'+checar B3 rapidamente.'},
+      {time:'10:15–12:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'12:00–12:30', label:'Almoço', cls:'almoco', note:''},
+      {time:'12:30–13:00', label:'Cardio', cls:'cardio', note:'30 min — mantém a rotina de exercício diário.'},
+      {time:'13:00–15:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'15:00–15:15', label:'Lanche', cls:'lanche', note:''},
+      {time:'15:15–17:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'17:00–17:20', label:'Pausa', cls:'pausa', note:''},
+      {time:'17:20–19:20', label:'TCC 2 · escrita', cls:'tcc', note:'2h bloco principal — capítulos, argumentação, revisão.'},
+      {time:'19:20–20:20', label:'Certificação', cls:'cert', note:'1h vídeo-aulas ou projeto prático.'},
+      {time:'20:20+', label:'Livre / Descanso', cls:'livre', note:''},
+    ],
+    'sex': [
+      {time:'07:00–08:00', label:'TCC 2 · revisão', cls:'tcc', note:'1h — revisão do que escreveu na semana.'},
+      {time:'08:00–10:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'10:00–10:15', label:'Lanche', cls:'lanche', note:''},
+      {time:'10:15–12:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'12:00–12:30', label:'Almoço', cls:'almoco', note:''},
+      {time:'12:30–13:00', label:'Cardio', cls:'cardio', note:''},
+      {time:'13:00–15:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'15:00–15:15', label:'Lanche', cls:'lanche', note:''},
+      {time:'15:15–17:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'17:00–18:00', label:'Certificação', cls:'cert', note:'1h prática ou projeto simples.'},
+      {time:'18:00+', label:'Livre', cls:'livre', note:'Sexta é sagrada.'},
+    ],
+    'sab': [
+      {time:'07:15–08:00', label:'Treino', cls:'treino', note:'45 min antes da aula.'},
+      {time:'08:00–10:30', label:'Inglês · aula', cls:'ingles', note:'Fixo e inegociável.'},
+      {time:'10:30–12:00', label:'Inglês · dever', cls:'ingles', note:'1,5h — aproveita que está no ritmo.'},
+      {time:'12:00–13:00', label:'Almoço', cls:'almoco', note:''},
+      {time:'13:00–16:00', label:'TCC 2 · escrita', cls:'tcc', note:'3h — maior bloco semanal do TCC.'},
+      {time:'16:00+', label:'Família / Lazer', cls:'familia', note:''},
+    ],
+    'dom': [
+      {time:'até 10:00', label:'Dormir', cls:'sono', note:''},
+      {time:'10:00–10:15', label:'Check-in semanal', cls:'checkin', note:''},
+      {time:'10:15–10:30', label:'Investimentos · manutenção', cls:'invest', note:'15 min — Kinvo, revisar carteira.'},
+      {time:'10:30–11:30', label:'Treino', cls:'treino', note:'1h — atividade prazerosa.'},
+      {time:'11:30+', label:'Descanso · família', cls:'familia', note:''},
+    ],
+  },
+  f4: {
+    'seg-qua': [
+      {time:'06:00–06:20', label:'Mobilidade', cls:'mobilidade', note:''},
+      {time:'06:30–08:00', label:'Certificação passiva', cls:'cert', note:'Áudio técnico no trajeto.'},
+      {time:'08:00–10:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'10:00–10:15', label:'Lanche', cls:'lanche', note:''},
+      {time:'10:15–12:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'12:00–13:00', label:'Almoço', cls:'almoco', note:''},
+      {time:'13:00–15:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'15:00–15:15', label:'Lanche', cls:'lanche', note:''},
+      {time:'15:15–17:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'17:00–19:30', label:'Trajeto volta', cls:'trajeto', note:'Descompressão — sem estudo pesado.'},
+      {time:'19:30–20:15', label:'Jantar', cls:'almoco', note:''},
+      {time:'20:15–21:45', label:'TCC 2 · escrita', cls:'tcc', note:'1,5h revisão ou escrita — ritmo sustentável para 18 semanas.'},
+      {time:'21:45+', label:'Descanso', cls:'sono', note:''},
+    ],
+    'ter-qui': [
+      {time:'07:00–08:00', label:'TCC 2 · escrita', cls:'tcc', note:'1h matutina — capítulos finais, análise, discussão.'},
+      {time:'08:00–10:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'10:00–10:15', label:'Lanche', cls:'lanche', note:'+checar B3.'},
+      {time:'10:15–12:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'12:00–12:30', label:'Almoço', cls:'almoco', note:''},
+      {time:'12:30–13:00', label:'Cardio', cls:'cardio', note:''},
+      {time:'13:00–15:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'15:00–15:15', label:'Lanche', cls:'lanche', note:''},
+      {time:'15:15–17:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'17:00–19:00', label:'TCC 2 · escrita', cls:'tcc', note:'2h bloco principal.'},
+      {time:'19:00–20:00', label:'Certificação', cls:'cert', note:'1h vídeo-aulas ou prática.'},
+      {time:'20:00+', label:'Livre', cls:'livre', note:''},
+    ],
+    'sex': [
+      {time:'07:00–08:00', label:'TCC 2 · revisão', cls:'tcc', note:'1h — revisão com feedback do orientador.'},
+      {time:'08:00–10:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'10:00–10:15', label:'Lanche', cls:'lanche', note:''},
+      {time:'10:15–12:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'12:00–12:30', label:'Almoço', cls:'almoco', note:''},
+      {time:'12:30–13:00', label:'Cardio', cls:'cardio', note:''},
+      {time:'13:00–15:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'15:00–15:15', label:'Lanche', cls:'lanche', note:''},
+      {time:'15:15–17:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'17:00–18:00', label:'Certificação', cls:'cert', note:''},
+      {time:'18:00+', label:'Livre', cls:'livre', note:'Sexta é sagrada.'},
+    ],
+    'sab': [
+      {time:'07:15–08:00', label:'Treino intenso', cls:'treino', note:'45 min antes da aula.'},
+      {time:'08:00–10:30', label:'Inglês · aula', cls:'ingles', note:'Fixo e inegociável.'},
+      {time:'10:30–12:00', label:'Inglês · dever', cls:'ingles', note:''},
+      {time:'12:00–13:00', label:'Almoço', cls:'almoco', note:''},
+      {time:'13:00–15:30', label:'TCC 2 · escrita', cls:'tcc', note:'2,5h — revisão de capítulos, incorpora feedback.'},
+      {time:'15:30+', label:'Família / Lazer', cls:'familia', note:''},
+    ],
+    'dom': [
+      {time:'até 09:00', label:'Dormir', cls:'sono', note:''},
+      {time:'09:00–09:15', label:'Check-in semanal', cls:'checkin', note:''},
+      {time:'09:15–09:30', label:'Investimentos · manutenção', cls:'invest', note:'15 min — revisar carteira no Kinvo.'},
+      {time:'09:30–10:30', label:'TCC 2 · revisão leve', cls:'tcc', note:'Relê o capítulo da semana, anota melhorias.'},
+      {time:'10:30–11:30', label:'Treino', cls:'treino', note:''},
+      {time:'11:30+', label:'Descanso · família', cls:'familia', note:''},
+    ],
+  },
+  f5: {
+    'seg-qua': [
+      {time:'06:00–06:20', label:'Mobilidade', cls:'mobilidade', note:''},
+      {time:'06:30–08:00', label:'Certificação passiva', cls:'cert', note:'Áudio técnico no trajeto.'},
+      {time:'08:00–10:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'10:00–10:15', label:'Lanche', cls:'lanche', note:'+checar B3.'},
+      {time:'10:15–12:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'12:00–13:00', label:'Almoço', cls:'almoco', note:''},
+      {time:'13:00–15:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'15:00–15:15', label:'Lanche', cls:'lanche', note:''},
+      {time:'15:15–17:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'17:00–19:30', label:'Trajeto volta', cls:'trajeto', note:'Descompressão.'},
+      {time:'19:30–20:15', label:'Jantar', cls:'almoco', note:''},
+      {time:'20:15–21:45', label:'Certificação', cls:'cert', note:'1,5h estudo ou projeto prático.'},
+      {time:'21:45+', label:'Descanso', cls:'sono', note:''},
+    ],
+    'ter-qui': [
+      {time:'07:00–08:00', label:'Certificação', cls:'cert', note:'1h vídeo-aulas ou simulado.'},
+      {time:'08:00–10:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'10:00–10:15', label:'Lanche', cls:'lanche', note:'+checar B3 — mais atenção nessa fase.'},
+      {time:'10:15–12:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'12:00–12:30', label:'Almoço', cls:'almoco', note:''},
+      {time:'12:30–13:00', label:'Cardio', cls:'cardio', note:''},
+      {time:'13:00–15:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'15:00–15:15', label:'Lanche', cls:'lanche', note:''},
+      {time:'15:15–17:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'17:00–19:00', label:'Certificação', cls:'cert', note:'2h projeto prático ou simulado.'},
+      {time:'19:00–20:00', label:'AFC', cls:'afc', note:'1h features novas ou melhorias.'},
+      {time:'20:00+', label:'Livre', cls:'livre', note:''},
+    ],
+    'sex': [
+      {time:'07:00–08:00', label:'Certificação', cls:'cert', note:'1h revisão da semana.'},
+      {time:'08:00–10:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'10:00–10:15', label:'Lanche', cls:'lanche', note:''},
+      {time:'10:15–12:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'12:00–12:30', label:'Almoço', cls:'almoco', note:''},
+      {time:'12:30–13:00', label:'Cardio', cls:'cardio', note:''},
+      {time:'13:00–15:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'15:00–15:15', label:'Lanche', cls:'lanche', note:''},
+      {time:'15:15–17:00', label:'Trabalho', cls:'trabalho', note:''},
+      {time:'17:00–18:30', label:'Carreira internacional', cls:'carreira', note:'LinkedIn em inglês, vagas, portfólio, network.'},
+      {time:'18:30+', label:'Livre', cls:'livre', note:'Sexta é sagrada.'},
+    ],
+    'sab': [
+      {time:'07:15–08:00', label:'Treino intenso', cls:'treino', note:''},
+      {time:'08:00–10:30', label:'Inglês · aula', cls:'ingles', note:'Fixo e inegociável.'},
+      {time:'10:30–12:00', label:'Inglês · conversação', cls:'ingles', note:'Intensifica — foco em fluência para entrevistas.'},
+      {time:'12:00–13:00', label:'Almoço', cls:'almoco', note:''},
+      {time:'13:00–15:30', label:'Certificação', cls:'cert', note:'2,5h simulado ou projeto.'},
+      {time:'15:30–17:00', label:'AFC', cls:'afc', note:'1,5h features novas.'},
+      {time:'17:00+', label:'Família / Lazer', cls:'familia', note:''},
+    ],
+    'dom': [
+      {time:'até 09:00', label:'Dormir', cls:'sono', note:''},
+      {time:'09:00–09:15', label:'Check-in semanal', cls:'checkin', note:''},
+      {time:'09:15–09:30', label:'Investimentos · manutenção', cls:'invest', note:'15–30 min — revisar, rebalancear, oportunidades.'},
+      {time:'09:30–11:00', label:'Carreira internacional', cls:'carreira', note:'Aplicações, prep entrevistas em inglês, network.'},
+      {time:'11:00–12:00', label:'Treino', cls:'treino', note:''},
+      {time:'12:00+', label:'Descanso · família', cls:'familia', note:''},
+    ],
+  },
+};
+
+const WEEK_MAP = {f1:{'seg-qua':['seg','qua'],'ter':['ter'],'qui':['qui'],'sex':['sex'],'sab':['sab'],'dom':['dom']},f2:{'seg-qua':['seg','qua'],'ter-qui':['ter','qui'],'sex':['sex'],'sab':['sab'],'dom':['dom']},f3:{'seg-qua':['seg','qua'],'ter-qui':['ter','qui'],'sex':['sex'],'sab':['sab'],'dom':['dom']},f4:{'seg-qua':['seg','qua'],'ter-qui':['ter','qui'],'sex':['sex'],'sab':['sab'],'dom':['dom']},f5:{'seg-qua':['seg','qua'],'ter-qui':['ter','qui'],'sex':['sex'],'sab':['sab'],'dom':['dom']}};
+const JS_DAY_MAP = {0:'dom',1:'seg',2:'ter',3:'qua',4:'qui',5:'sex',6:'sab'};
+const DAY_LABELS = {seg:'Seg',qua:'Qua',ter:'Ter',qui:'Qui',sex:'Sex',sab:'Sáb',dom:'Dom'};
+const MONTH_BR = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+
+let currentPhase = 'f1';
+let selectedDay = 'seg';
+let openBlockIdx = null;
+let statuses = {};
+
+function toDateStr(d){ return d.toISOString().split('T')[0]; }
+
+function getPhase(dateStr){
+  for(const p of PHASE_RANGES){
+    if(dateStr >= p.start && dateStr <= p.end) return p;
+  }
+  return PHASE_RANGES[PHASE_RANGES.length-1];
+}
+
+function getDayKey(phase, dayCode){
+  const wmap = WEEK_MAP[phase];
+  for(const [k,days] of Object.entries(wmap)){
+    if(days.includes(dayCode)) return k;
+  }
+  return null;
+}
+
+function getBlocks(phase, dayCode){
+  const key = getDayKey(phase, dayCode);
+  if(!key) return [];
+  return (DAYS[phase]||{})[key] || [];
+}
+
+function storageKey(dateStr, dayCode){ return `tasks:${dateStr}:${dayCode}`; }
+
+function loadStatuses(dateStr, dayCode){
+  try{
+    const raw = localStorage.getItem(storageKey(dateStr, dayCode));
+    statuses = raw ? JSON.parse(raw) : {};
+  } catch(e){ statuses = {}; }
+}
+
+function saveStatuses(dateStr, dayCode){
+  try{ localStorage.setItem(storageKey(dateStr, dayCode), JSON.stringify(statuses)); }
+  catch(e){}
+}
+
+function formatDate(d){
+  const days=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  return `${days[d.getDay()]}, ${d.getDate()} ${MONTH_BR[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+let currentDateStr = '';
+let currentDayCode = '';
+
+function renderDayNav(phase){
+  const nav = document.getElementById('day-nav');
+  const today = new Date();
+  const todayCode = JS_DAY_MAP[today.getDay()];
+  const days = Object.values(WEEK_MAP[phase]).flat();
+  const unique = [...new Set(days)];
+  const order = ['seg','ter','qua','qui','sex','sab','dom'];
+  const sorted = order.filter(d=>unique.includes(d));
+  nav.innerHTML = '';
+  sorted.forEach(d=>{
+    const pill = document.createElement('div');
+    pill.className = 'day-pill' + (d===selectedDay?' active':'') + (d===todayCode?' today':'');
+    pill.textContent = DAY_LABELS[d];
+    pill.onclick = ()=>{ selectedDay=d; renderAll(); };
+    nav.appendChild(pill);
+  });
+}
+
+function renderBlocks(){
+  const list = document.getElementById('blocks-list');
+  const blocks = getBlocks(currentPhase, selectedDay);
+
+  if(!blocks.length){
+    list.innerHTML = '<div class="empty-msg">Nenhum bloco para esse dia nessa fase.</div>';
+    return;
+  }
+
+  let done=0,skip=0,swap=0,pend=0;
+  list.innerHTML = '';
+
+  blocks.forEach((b,i)=>{
+    const st = statuses[i] || {};
+    if(st.status==='done') done++;
+    else if(st.status==='skipped') skip++;
+    else if(st.status==='swapped') swap++;
+    else pend++;
+
+    const card = document.createElement('div');
+    card.className = 'block-card' + (st.status?' '+st.status:'');
+    card.innerHTML = `
+      <div class="block-header" onclick="openSheet(${i})">
+        <div class="block-time">${b.time}</div>
+        <div class="block-main">
+          <div><span class="block-label lbl-${b.cls}">${b.label}</span></div>
+          ${b.note?`<div class="block-note">${b.note}</div>`:''}
+          ${st.status==='swapped'&&st.swap?`<div class="block-swap-note">⇄ ${st.swap}</div>`:''}
+        </div>
+        <div class="status-dot ${st.status||''}">${st.status==='done'?'✓':st.status==='skipped'?'✕':st.status==='swapped'?'⇄':''}</div>
+      </div>`;
+    list.appendChild(card);
+  });
+
+  document.getElementById('s-done').textContent=done;
+  document.getElementById('s-skip').textContent=skip;
+  document.getElementById('s-swap').textContent=swap;
+  document.getElementById('s-pend').textContent=pend;
+  setTimeout(tickClock,0);
+
+  const total=blocks.length;
+  const pct=total?Math.round((done+skip+swap)/total*100):0;
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-label').textContent=`${done+skip+swap} de ${total} tarefas`;
+  document.getElementById('prog-pct').textContent=pct+'%';
+}
+
+function renderAll(){
+  const today = new Date();
+  const todayStr = toDateStr(today);
+  const phase = getPhase(todayStr);
+  currentPhase = phase.id;
+
+  // if selected day not in phase, pick today
+  const available = Object.values(WEEK_MAP[currentPhase]).flat();
+  if(!available.includes(selectedDay)){
+    selectedDay = JS_DAY_MAP[today.getDay()];
+  }
+
+  // compute which actual date selectedDay refers to (within current week)
+  const dow = today.getDay(); // 0=sun..6=sat
+  const todayCode = JS_DAY_MAP[dow];
+  const order = ['dom','seg','ter','qua','qui','sex','sab'];
+  const diff = order.indexOf(selectedDay) - order.indexOf(todayCode);
+  const selDate = new Date(today);
+  selDate.setDate(today.getDate()+diff);
+  currentDateStr = toDateStr(selDate);
+  currentDayCode = selectedDay;
+
+  loadStatuses(currentDateStr, currentDayCode);
+
+  const fullDays=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+  document.getElementById('top-weekday').textContent = fullDays[selDate.getDay()];
+  document.getElementById('today-label').textContent = `${selDate.getDate()} de ${['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'][selDate.getMonth()]} de ${selDate.getFullYear()}`;
+  const badge = document.getElementById('phase-badge');
+  badge.textContent = phase.label;
+  badge.className = 'phase-badge '+phase.id;
+
+  renderDayNav(currentPhase);
+  renderBlocks();
+}
+
+function openSheet(idx){
+  openBlockIdx = idx;
+  const b = getBlocks(currentPhase, selectedDay)[idx];
+  document.getElementById('sheet-block-name').textContent = b.label + (b.time?' · '+b.time:'');
+  document.getElementById('swap-area').classList.remove('open');
+  document.getElementById('swap-input').value = (statuses[idx]||{}).swap || '';
+  document.getElementById('overlay').classList.add('open');
+}
+
+function closeSheet(e){
+  if(e.target===document.getElementById('overlay')||e===true){
+    document.getElementById('overlay').classList.remove('open');
+    openBlockIdx=null;
+  }
+}
+
+function setStatus(s){
+  if(openBlockIdx===null) return;
+  if(s===null){ delete statuses[openBlockIdx]; }
+  else { statuses[openBlockIdx]={status:s}; }
+  saveStatuses(currentDateStr, currentDayCode);
+  closeSheet(true);
+  renderBlocks();
+}
+
+function openSwap(){
+  document.getElementById('swap-area').classList.add('open');
+  document.getElementById('swap-input').focus();
+}
+
+function confirmSwap(){
+  if(openBlockIdx===null) return;
+  const txt = document.getElementById('swap-input').value.trim();
+  statuses[openBlockIdx] = {status:'swapped', swap: txt||'(sem descrição)'};
+  saveStatuses(currentDateStr, currentDayCode);
+  closeSheet(true);
+  renderBlocks();
+}
+
+function toggleTheme(){
+  const html=document.documentElement;
+  const btn=document.getElementById('theme-btn');
+  if(html.getAttribute('data-theme')==='light'){
+    html.removeAttribute('data-theme');
+    btn.textContent='☀';
+    localStorage.setItem('theme','dark');
+  } else {
+    html.setAttribute('data-theme','light');
+    btn.textContent='🌙';
+    localStorage.setItem('theme','light');
+  }
+}
+
+function parseTime(t){
+  // parse "HH:MM" from block time strings like "07:00–08:00" or "até 09:00" or "09:00+"
+  const m = t.match(/(\d{1,2}):(\d{2})/);
+  if(!m) return null;
+  return parseInt(m[1])*60+parseInt(m[2]);
+}
+
+function getCurrentBlockIdx(blocks){
+  const now = new Date();
+  const nowMin = now.getHours()*60+now.getMinutes();
+  // find block whose start <= now < next block start
+  const starts = blocks.map(b=>parseTime(b.time));
+  for(let i=starts.length-1;i>=0;i--){
+    if(starts[i]!==null && nowMin>=starts[i]) return i;
+  }
+  return null;
+}
+
+function tickClock(){
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mm = String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('clock-time').textContent = hh+':'+mm;
+
+  // only show current block if viewing today
+  const todayCode = JS_DAY_MAP[new Date().getDay()];
+  if(selectedDay !== todayCode){ 
+    document.getElementById('clock-current').textContent='';
+    document.getElementById('clock-next').textContent='';
+    return;
+  }
+
+  const blocks = getBlocks(currentPhase, selectedDay);
+  const idx = getCurrentBlockIdx(blocks);
+  const curEl = document.getElementById('clock-current');
+  const nxtEl = document.getElementById('clock-next');
+
+  if(idx!==null){
+    const b = blocks[idx];
+    curEl.textContent = b.label;
+    // highlight current card
+    document.querySelectorAll('.block-card').forEach((c,i)=>{
+      c.classList.toggle('current-block', i===idx);
+    });
+    // next block
+    if(idx+1<blocks.length){
+      nxtEl.textContent = 'a seguir → '+blocks[idx+1].label+' ('+blocks[idx+1].time.split('–')[0]+')';
+    } else {
+      nxtEl.textContent = 'último bloco do dia';
+    }
+  } else {
+    curEl.textContent = 'antes do primeiro bloco';
+    nxtEl.textContent = blocks.length?'primeiro → '+blocks[0].label+' ('+blocks[0].time.split('–')[0]+')':'';
+    document.querySelectorAll('.block-card').forEach(c=>c.classList.remove('current-block'));
+  }
+}
+
+// init
+(function(){
+  const saved=localStorage.getItem('theme');
+  if(saved==='light'){
+    document.documentElement.setAttribute('data-theme','light');
+    document.getElementById('theme-btn').textContent='🌙';
+  }
+  const today=new Date();
+  selectedDay = JS_DAY_MAP[today.getDay()];
+  renderAll();
+  tickClock();
+  setInterval(tickClock, 10000);
+})();
+</script>
+</body>
+</html>
