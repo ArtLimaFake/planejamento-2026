@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planejamento 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap');
+  :root {
+    --bg:#0d0f14;--surface:#141720;--surface2:#1c2030;--border:#252a3a;
+    --accent:#f0c040;--accent2:#4fd1a0;--accent3:#f07070;--accent4:#7090f0;
+    --text:#e8eaf0;--muted:#7880a0;--danger:#f05060;--warn:#f0a040;--invest:#f0d080;
+  }
+  [data-theme="light"] {
+    --bg:#f4f5f7;--surface:#ffffff;--surface2:#eef0f4;--border:#d8dce8;
+    --accent:#c09000;--accent2:#1a9e72;--accent3:#c03040;--accent4:#3060d0;
+    --text:#1a1e2e;--muted:#6070a0;--danger:#c02030;--warn:#c07000;--invest:#906000;
+  }
+  [data-theme="light"] .callout.danger{background:linear-gradient(135deg,#fff0f0,#ffe8e8);border-color:#c02030;color:#701020;}
+  [data-theme="light"] .callout.danger strong{color:#c02030;}
+  [data-theme="light"] .callout.green{background:linear-gradient(135deg,#f0fff8,#e8fff4);border-color:#1a9e72;color:#0a5038;}
+  [data-theme="light"] .callout.green strong{color:#1a9e72;}
+  [data-theme="light"] .callout.gold{background:linear-gradient(135deg,#fffbf0,#fff8e8);border-color:#c09000;color:#604800;}
+  [data-theme="light"] .callout.gold strong{color:#906000;}
+  [data-theme="light"] .tblock-label.trabalho{background:#e8f0ff;color:#2050b0;}
+  [data-theme="light"] .tblock-label.concurso{background:#ffe8e8;color:#b02030;}
+  [data-theme="light"] .tblock-label.rinha{background:#e8fff4;color:#1a7050;}
+  [data-theme="light"] .tblock-label.ingles{background:#fff4e8;color:#904010;}
+  [data-theme="light"] .tblock-label.descanso{background:#f0f0ff;color:#504090;}
+  [data-theme="light"] .tblock-label.livre{background:#eefff8;color:#207050;}
+  [data-theme="light"] .tblock-label.cardio{background:#f0ffe0;color:#407010;}
+  [data-theme="light"] .tblock-label.mobilidade{background:#eeffd8;color:#305010;}
+  [data-theme="light"] .tblock-label.treino{background:#f4ffd0;color:#506010;}
+  [data-theme="light"] .tblock-label.sono{background:#f0f0f8;color:#404070;}
+  [data-theme="light"] .tblock-label.tcc{background:#fce8ff;color:#801090;}
+  [data-theme="light"] .tblock-label.cert{background:#f8e8ff;color:#6010a0;}
+  [data-theme="light"] .tblock-label.familia{background:#f8f0ff;color:#7030c0;}
+  [data-theme="light"] .tblock-label.invest{background:#fff8d0;color:#705000;}
+  [data-theme="light"] .tblock-label.checkin{background:#f0f0f8;color:#505090;}
+  [data-theme="light"] .tblock-label.afc{background:#e8fff8;color:#106050;}
+  [data-theme="light"] .tblock-label.carreira{background:#e8f0ff;color:#204080;}
+  [data-theme="light"] .tblock-label.pausa{background:#f4f4f4;color:#505050;}
+  [data-theme="light"] .tblock-label.lanche{background:#fff8f0;color:#804020;}
+  [data-theme="light"] .tblock-label.almoco{background:#fff4e8;color:#905020;}
+  [data-theme="light"] .tblock-label.redacao{background:#ffe8e8;color:#901030;}
+  [data-theme="light"] .tblock-label.trajeto{background:#e8eef8;color:#304060;}
+  [data-theme="light"] .highlight-box{background:linear-gradient(135deg,#fffdf0,#fffbe8);border-color:#c09000;color:#503800;}
+  [data-theme="light"] .highlight-box strong{color:#906000;}
+  [data-theme="light"] .cont-badge.red{background:#fff0f0;color:#c02030;border-color:#c02030;}
+  [data-theme="light"] .cont-badge.yellow{background:#fffbf0;color:#907000;border-color:#c09000;}
+  [data-theme="light"] .cont-badge.purple{background:#fdf0ff;color:#801090;border-color:#c040d0;}
+  [data-theme="light"] .cont-badge.blue{background:#f0f4ff;color:#2050b0;border-color:#3060d0;}
+  [data-theme="light"] .isession-content h4{color:#906000;}
+  [data-theme="light"] .isession-num{color:#906000;}
+  [data-theme="light"] .tool-card strong{color:#906000;}
+  [data-theme="light"] .ptab.active{background:#c09000;color:#fff;border-color:#c09000;}
+  [data-theme="light"] .tag.hot{border-color:#c02030;color:#c02030;}
+  [data-theme="light"] .tag.ok{border-color:#1a9e72;color:#1a9e72;}
+  [data-theme="light"] .tag.blue{border-color:#3060d0;color:#3060d0;}
+  [data-theme="light"] .tag.gold{border-color:#c09000;color:#c09000;}
+  [data-theme="light"] .tag.money{border-color:#906000;color:#906000;}
+  [data-theme="light"] .tag.purple{border-color:#801090;color:#801090;}
+  [data-theme="light"] .invest-alert{background:#fffbf0;border-color:#c09000;color:#604800;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;padding:24px 16px 60px;}
+
+  .header{text-align:center;margin-bottom:32px;padding-top:12px;}
+  .header h1{font-size:2rem;font-weight:800;letter-spacing:-1px;color:var(--accent);line-height:1.1;}
+  .header p{color:var(--muted);font-family:'Space Mono',monospace;font-size:0.7rem;margin-top:6px;}
+
+  .callout{border-radius:10px;padding:13px 16px;margin-bottom:13px;font-size:0.82rem;line-height:1.7;}
+  .callout strong{display:block;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:5px;}
+  .callout.danger{background:linear-gradient(135deg,#2a1010,#1c0a0a);border:1px solid var(--danger);border-left:4px solid var(--danger);color:#e0b0b0;}
+  .callout.danger strong{color:var(--danger);}
+  .callout.green{background:linear-gradient(135deg,#0d1a20,#0a1520);border:1px solid var(--accent2);border-left:4px solid var(--accent2);color:#b0e0d0;}
+  .callout.green strong{color:var(--accent2);}
+  .callout.gold{background:linear-gradient(135deg,#1a1500,#130f00);border:1px solid var(--invest);border-left:4px solid var(--invest);color:#e8d8a0;}
+  .callout.gold strong{color:var(--invest);}
+
+  section{margin-bottom:26px;}
+  .section-title{font-size:0.67rem;text-transform:uppercase;letter-spacing:3px;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:11px;border-left:2px solid var(--accent);padding-left:9px;}
+
+  /* phases */
+  .phases{display:flex;flex-direction:column;gap:7px;}
+  .phase{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:13px;position:relative;overflow:hidden;}
+  .phase::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;}
+  .phase.p1::before{background:var(--danger);}
+  .phase.p2::before{background:var(--warn);}
+  .phase.p3::before{background:#c0d060;}
+  .phase.p4::before{background:var(--accent2);}
+  .phase.p5::before{background:var(--accent4);}
+  .phase-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px;}
+  .phase-name{font-weight:700;font-size:0.92rem;}
+  .phase-date{font-family:'Space Mono',monospace;font-size:0.63rem;color:var(--muted);text-align:right;}
+  .phase-items{display:flex;flex-wrap:wrap;gap:4px;}
+  .tag{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:2px 8px;font-size:0.68rem;color:var(--text);font-family:'Space Mono',monospace;}
+  .tag.hot{border-color:var(--danger);color:var(--danger);}
+  .tag.ok{border-color:var(--accent2);color:var(--accent2);}
+  .tag.blue{border-color:var(--accent4);color:var(--accent4);}
+  .tag.gold{border-color:var(--accent);color:var(--accent);}
+  .tag.money{border-color:var(--invest);color:var(--invest);}
+  .tag.purple{border-color:#c070c0;color:#c070c0;}
+
+  /* tabs */
+  .phase-tabs{display:flex;gap:5px;margin-bottom:11px;flex-wrap:wrap;}
+  .ptab{padding:5px 10px;border-radius:20px;font-size:0.67rem;font-family:'Space Mono',monospace;cursor:pointer;border:1px solid var(--border);background:var(--surface2);color:var(--muted);transition:all .2s;line-height:1.5;text-align:center;}
+  .ptab.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700;}
+  .schedule-phase{display:none;}
+  .schedule-phase.active{display:block;}
+
+  /* day */
+  .schedule-day{background:var(--surface);border:1px solid var(--border);border-radius:9px;margin-bottom:7px;overflow:hidden;}
+  .day-header{padding:8px 13px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+  .day-name{font-weight:700;font-size:0.86rem;}
+  .day-type{font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+  .day-type.presencial{color:var(--warn);}
+  .day-type.home{color:var(--accent2);}
+  .day-type.fds{color:var(--accent4);}
+
+  .time-blocks{padding:9px 13px;display:flex;flex-direction:column;gap:4px;}
+  .tblock{display:flex;gap:9px;align-items:flex-start;}
+  .tblock-time{font-family:'Space Mono',monospace;font-size:0.64rem;color:var(--muted);min-width:86px;padding-top:3px;flex-shrink:0;}
+  .tblock-label{font-size:0.75rem;padding:2px 7px;border-radius:4px;font-weight:600;white-space:nowrap;}
+  .tblock-label.trabalho{background:#1a2535;color:#6090d0;}
+  .tblock-label.concurso{background:#2a1a1a;color:#f07070;}
+  .tblock-label.rinha{background:#1a2520;color:#50d090;}
+  .tblock-label.ingles{background:#251a10;color:#f0a040;}
+  .tblock-label.descanso{background:#1a1a25;color:#8080c0;}
+  .tblock-label.livre{background:#1a2020;color:#60a090;}
+  .tblock-label.cardio{background:#1e2508;color:#90c050;}
+  .tblock-label.mobilidade{background:#181f06;color:#70a030;}
+  .tblock-label.treino{background:#202808;color:#b0d040;}
+  .tblock-label.sono{background:#151520;color:#606090;}
+  .tblock-label.tcc{background:#251525;color:#c070c0;}
+  .tblock-label.cert{background:#201520;color:#b060d0;}
+  .tblock-label.familia{background:#201a25;color:#d090f0;}
+  .tblock-label.invest{background:#201800;color:#f0d080;}
+  .tblock-label.checkin{background:#181820;color:#9090c0;}
+  .tblock-label.afc{background:#152020;color:#60c0b0;}
+  .tblock-label.carreira{background:#151a25;color:#80a0e0;}
+  .tblock-label.pausa{background:#181818;color:#707070;}
+  .tblock-label.lanche{background:#1a1510;color:#c09060;}
+  .tblock-label.almoco{background:#1a1208;color:#d0a060;}
+  .tblock-label.redacao{background:#2a1515;color:#f09090;}
+  .tblock-label.trajeto{background:#101520;color:#506080;}
+
+  .tblock-note{font-size:0.68rem;color:var(--muted);padding-top:3px;line-height:1.4;}
+  .tblock-sub{font-size:0.68rem;color:#505870;padding-top:3px;font-style:italic;}
+
+  .divider{border:none;border-top:1px dashed var(--border);margin:6px 0;}
+
+  .highlight-box{background:linear-gradient(135deg,#1a1a0d,#151508);border:1px solid var(--accent);border-left:4px solid var(--accent);border-radius:9px;padding:11px 14px;margin-top:8px;font-size:0.79rem;line-height:1.7;color:#e8e0b0;}
+  .highlight-box strong{color:var(--accent);}
+
+  /* contingency */
+  .contingency-grid{display:flex;flex-direction:column;gap:8px;}
+  .cont-card{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:12px 14px;}
+  .cont-card h4{font-size:0.82rem;font-weight:700;margin-bottom:6px;display:flex;gap:8px;align-items:center;}
+  .cont-badge{font-family:'Space Mono',monospace;font-size:0.6rem;padding:2px 7px;border-radius:10px;font-weight:700;}
+  .cont-badge.red{background:#3a1010;color:#f07070;border:1px solid #f07070;}
+  .cont-badge.yellow{background:#2a2010;color:#f0c040;border:1px solid #f0c040;}
+  .cont-badge.purple{background:#251525;color:#c070c0;border:1px solid #c070c0;}
+  .cont-badge.blue{background:#101525;color:#7090f0;border:1px solid #7090f0;}
+  .cont-items{display:flex;flex-direction:column;gap:4px;}
+  .cont-item{font-size:0.77rem;color:var(--muted);line-height:1.6;padding-left:10px;border-left:2px solid var(--border);}
+  .cont-item strong{color:var(--text);}
+
+  /* invest sessions */
+  .invest-sessions{display:flex;flex-direction:column;gap:7px;margin-bottom:9px;}
+  .isession{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 13px;display:flex;gap:11px;align-items:flex-start;}
+  .isession-num{font-family:'Space Mono',monospace;font-size:1rem;font-weight:700;color:var(--invest);min-width:24px;}
+  .isession-content h4{font-size:0.83rem;font-weight:700;margin-bottom:2px;color:var(--invest);}
+  .isession-content p{font-size:0.75rem;color:var(--muted);line-height:1.6;}
+
+  .tools-grid{display:flex;flex-direction:column;gap:7px;}
+  .tool-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 13px;font-size:0.78rem;}
+  .tool-card h4{font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:4px;}
+  .tool-card p{color:var(--text);line-height:1.6;}
+  .tool-card strong{color:var(--invest);}
+
+  .tips{display:flex;flex-direction:column;gap:7px;}
+  .tip{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:11px 13px;font-size:0.79rem;line-height:1.7;color:var(--text);}
+  .tip strong{color:var(--accent);}
+
+  .sacrifice-list{display:flex;flex-direction:column;gap:6px;}
+  .sacrifice-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 13px;font-size:0.79rem;display:flex;gap:9px;align-items:flex-start;}
+  .sacrifice-icon{font-size:0.93rem;flex-shrink:0;}
+  .sacrifice-text{line-height:1.6;color:var(--text);}
+  .sacrifice-text strong{color:var(--accent3);}
+
+  .footer{text-align:center;margin-top:40px;color:var(--muted);font-family:'Space Mono',monospace;font-size:0.62rem;}
+
+  .invest-alert{background:#181400;border:1px solid #806000;border-radius:6px;padding:5px 10px;margin-top:4px;font-size:0.68rem;color:#c0a040;display:flex;gap:6px;align-items:flex-start;}
+</style>
+</head>
+<body>
+
+<div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
+  <button onclick="toggleTheme()" id="theme-btn" style="background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:5px 14px;font-family:'Space Mono',monospace;font-size:0.68rem;cursor:pointer;transition:all .2s;">☀ Tema claro</button>
+</div>
+<div class="header">
+  <h1>Planejamento 2026</h1>
+  <p>versão final · 23/05/2026 · todas as fases detalhadas</p>
+</div>
+
+<div class="callout danger">
+  <strong>⚠ Diagnóstico honesto</strong>
+  O concurso exige <b>300h</b> de estudo e você tem <b>~43 dias (~160h livres)</b>. Déficit real — cobrirá ~53% do material. Estratégia: vídeo-aulas primeiro, apostilas no meio, redação + questões nos últimos 15 dias. TCC entra nas Fases 1 e 2 em modo leitura bibliográfica (30 min/dia nos home offices) — impacto mínimo no concurso, base sólida para a Fase 3.
+</div>
+
+<div class="callout green">
+  <strong>✓ TCC em todas as fases</strong>
+  Fases 1 & 2: leitura bibliográfica + fichamentos (30 min/dia, ter/qui/sex). Fase 3: escrita intensa (base pronta). Fase 4: conclusão + orientador. Você não começa do zero em nenhum momento.
+</div>
+
+<div class="callout gold">
+  <strong>💰 Investimentos — janela de mercado</strong>
+  B3 funciona das 10h às 17h. Nos dias de home office, você pode monitorar brevemente às 10h (lanche) e 15h (lanche) sem comprometer o trabalho — são pausas que já acontecem. Decisões maiores ficam para os blocos de domingo.
+</div>
+
+<!-- FASES -->
+<section>
+  <div class="section-title">Linha do tempo · 5 fases</div>
+  <div class="phases">
+    <div class="phase p1">
+      <div class="phase-header"><span class="phase-name">⚡ Fase 1 — Rinha + Concurso</span><span class="phase-date">23/05 → 05/06<br>13 dias</span></div>
+      <div class="phase-items"><span class="tag hot">Rinha deadline</span><span class="tag hot">Concurso inicia</span><span class="tag ok">Inglês sáb fixo</span><span class="tag purple">TCC bibliog.</span><span class="tag money">Invest S1</span></div>
+    </div>
+    <div class="phase p2">
+      <div class="phase-header"><span class="phase-name">📚 Fase 2 — Concurso total</span><span class="phase-date">06/06 → 05/07<br>29 dias</span></div>
+      <div class="phase-items"><span class="tag hot">Concurso 100%</span><span class="tag ok">Inglês sáb fixo</span><span class="tag purple">TCC bibliog.</span><span class="tag money">Invest S2–S4</span><span class="tag hot">Redação foco final</span></div>
+    </div>
+    <div class="phase p3">
+      <div class="phase-header"><span class="phase-name">🧠 Fase 3 — Janela do TCC</span><span class="phase-date">06/07 → 09/08<br>5 semanas</span></div>
+      <div class="phase-items"><span class="tag gold">TCC escrita intensa</span><span class="tag ok">Inglês sáb fixo</span><span class="tag blue">Cert. leve</span><span class="tag money">Invest manutenção</span></div>
+    </div>
+    <div class="phase p4">
+      <div class="phase-header"><span class="phase-name">🎓 Fase 4 — Semestre TCC 2</span><span class="phase-date">10/08 → 14/12<br>18 semanas</span></div>
+      <div class="phase-items"><span class="tag hot">TCC conclusão</span><span class="tag ok">Inglês sáb fixo</span><span class="tag blue">Certificações</span><span class="tag money">Invest manutenção</span></div>
+    </div>
+    <div class="phase p5">
+      <div class="phase-header"><span class="phase-name">🌍 Fase 5 — Carreira internacional</span><span class="phase-date">15/12 → adiante</span></div>
+      <div class="phase-items"><span class="tag blue">Cert. foco</span><span class="tag ok">Inglês intensivo</span><span class="tag gold">AFC features</span><span class="tag money">Invest. expansão</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ROTINAS -->
+<section>
+  <div class="section-title">Rotina diária · selecione a fase</div>
+  <div class="phase-tabs">
+    <div class="ptab active" onclick="showPhase('f1',this)">Fase 1<br><small>23/05–05/06</small></div>
+    <div class="ptab" onclick="showPhase('f2',this)">Fase 2<br><small>06/06–05/07</small></div>
+    <div class="ptab" onclick="showPhase('f3',this)">Fase 3<br><small>06/07–09/08</small></div>
+    <div class="ptab" onclick="showPhase('f4',this)">Fase 4<br><small>10/08–14/12</small></div>
+    <div class="ptab" onclick="showPhase('f5',this)">Fase 5<br><small>15/12+</small></div>
+  </div>
+
+  <!-- ===== FASE 1 ===== -->
+  <div class="schedule-phase active" id="f1">
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Segunda / Quarta</span><span class="day-type presencial">presencial · dia pesado</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">06:00 – 06:20</span><span class="tblock-label mobilidade">Mobilidade</span><span class="tblock-note">20 min em casa — alongamento, mobilidade articular, respiração. Ativa o corpo antes do dia longo.</span></div>
+        <div class="tblock"><span class="tblock-time">06:20 – 06:30</span><span class="tblock-label pausa">Preparo saída</span></div>
+        <div class="tblock"><span class="tblock-time">06:30 – 08:00</span><span class="tblock-label concurso">Concurso passivo</span><span class="tblock-note">Áudio das aulas no fone durante o trajeto (~1,5h)</span></div>
+        <div class="tblock"><span class="tblock-time">08:00 – 10:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">10:00 – 10:15</span><span class="tblock-label lanche">Lanche</span></div>
+        <div class="tblock"><span class="tblock-time">10:15 – 12:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">12:00 – 13:00</span><span class="tblock-label almoco">Almoço</span></div>
+        <div class="tblock"><span class="tblock-time">13:00 – 15:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">15:00 – 15:15</span><span class="tblock-label lanche">Lanche</span></div>
+        <div class="tblock"><span class="tblock-time">15:15 – 17:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">17:00 – 19:30</span><span class="tblock-label trajeto">Trajeto volta</span><span class="tblock-note">Descompressão ativa: música, podcast de entretenimento, ou silêncio. Nada de aulas — deixa o cérebro descansar do dia presencial.</span></div>
+        <div class="tblock"><span class="tblock-time">19:30 – 20:15</span><span class="tblock-label almoco">Jantar</span><span class="tblock-note">Refeição tranquila, sem tela de estudo</span></div>
+        <div class="tblock"><span class="tblock-time">20:15 – 21:15</span><span class="tblock-label concurso">Concurso</span><span class="tblock-note">1h leve — apostilas ou revisão do que ouviu no trajeto. Nada de vídeo novo.</span></div>
+        <div class="tblock"><span class="tblock-time">21:15+</span><span class="tblock-label sono">Descanso</span><span class="tblock-note">Tela escura, sem estimulação forte. Esses dias são os mais pesados da semana.</span></div>
+      </div>
+    </div>
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Terça</span><span class="day-type home">home office · rinha + concurso + TCC</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">07:00 – 07:30</span><span class="tblock-label tcc">TCC · leitura</span><span class="tblock-note">30 min fichamento ou leitura bibliográfica — mente fresca, antes do trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">07:30 – 08:00</span><span class="tblock-label concurso">Concurso</span><span class="tblock-note">30 min vídeo-aula — aquece para o dia</span></div>
+        <div class="tblock"><span class="tblock-time">08:00 – 10:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">10:00 – 10:15</span><span class="tblock-label lanche">Lanche</span><span class="tblock-note">+ 5 min olhar B3 se tiver algo relevante (mercado aberto desde 10h)</span></div>
+        <div class="tblock"><span class="tblock-time">10:15 – 12:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">12:00 – 12:30</span><span class="tblock-label almoco">Almoço</span></div>
+        <div class="tblock"><span class="tblock-time">12:30 – 13:00</span><span class="tblock-label cardio">Cardio</span><span class="tblock-note">30 min — caminhada rápida, ciclismo, jumping jacks, ou pular corda. Não precisa sair de casa.</span></div>
+        <div class="tblock"><span class="tblock-time">13:00 – 15:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">15:00 – 15:15</span><span class="tblock-label lanche">Lanche</span><span class="tblock-note">+ 5 min checar B3 se necessário</span></div>
+        <div class="tblock"><span class="tblock-time">15:15 – 17:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">17:00 – 17:20</span><span class="tblock-label pausa">Pausa obrigatória</span><span class="tblock-note">Levanta da cadeira, água, ar. Transição entre modos.</span></div>
+        <div class="tblock"><span class="tblock-time">17:20 – 19:20</span><span class="tblock-label concurso">Concurso</span><span class="tblock-note">2h vídeo-aulas — bloco principal do dia</span></div>
+        <div class="tblock"><span class="tblock-time">19:20 – 20:00</span><span class="tblock-label almoco">Jantar</span></div>
+        <div class="tblock"><span class="tblock-time">20:00 – 21:30</span><span class="tblock-label rinha">Rinha de Backend</span><span class="tblock-note">1,5h hiperfoco — Java Spring Boot, otimização de recursos</span></div>
+        <div class="tblock"><span class="tblock-time">21:30+</span><span class="tblock-label sono">Descanso</span></div>
+      </div>
+    </div>
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Quinta</span><span class="day-type home">home office · concurso foco</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">07:00 – 07:30</span><span class="tblock-label tcc">TCC · leitura</span><span class="tblock-note">30 min fichamento ou leitura bibliográfica</span></div>
+        <div class="tblock"><span class="tblock-time">07:30 – 08:00</span><span class="tblock-label concurso">Concurso</span><span class="tblock-note">30 min revisão do dia anterior</span></div>
+        <div class="tblock"><span class="tblock-time">08:00 – 10:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">10:00 – 10:15</span><span class="tblock-label lanche">Lanche</span><span class="tblock-note">+ checar B3 rapidamente</span></div>
+        <div class="tblock"><span class="tblock-time">10:15 – 12:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">12:00 – 12:30</span><span class="tblock-label almoco">Almoço</span></div>
+        <div class="tblock"><span class="tblock-time">12:30 – 13:00</span><span class="tblock-label cardio">Cardio</span><span class="tblock-note">30 min — mesmo protocolo da terça</span></div>
+        <div class="tblock"><span class="tblock-time">13:00 – 15:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">15:00 – 15:15</span><span class="tblock-label lanche">Lanche</span></div>
+        <div class="tblock"><span class="tblock-time">15:15 – 17:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">17:00 – 17:20</span><span class="tblock-label pausa">Pausa obrigatória</span></div>
+        <div class="tblock"><span class="tblock-time">17:20 – 20:00</span><span class="tblock-label concurso">Concurso</span><span class="tblock-note">2,5h — maior bloco da semana, vídeo-aulas principais</span></div>
+        <div class="tblock"><span class="tblock-time">20:00 – 20:40</span><span class="tblock-label almoco">Jantar</span></div>
+        <div class="tblock"><span class="tblock-time">20:40 – 22:00</span><span class="tblock-label rinha">Rinha de Backend</span><span class="tblock-note">1,2h — revisão ou testes de performance</span></div>
+        <div class="tblock"><span class="tblock-time">22:00+</span><span class="tblock-label sono">Descanso</span></div>
+      </div>
+    </div>
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Sexta</span><span class="day-type home">home office</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">07:00 – 07:30</span><span class="tblock-label tcc">TCC · leitura</span><span class="tblock-note">30 min — fecha a semana de fichamentos</span></div>
+        <div class="tblock"><span class="tblock-time">07:30 – 08:00</span><span class="tblock-label concurso">Concurso</span><span class="tblock-note">30 min revisão rápida</span></div>
+        <div class="tblock"><span class="tblock-time">08:00 – 10:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">10:00 – 10:15</span><span class="tblock-label lanche">Lanche</span></div>
+        <div class="tblock"><span class="tblock-time">10:15 – 12:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">12:00 – 12:30</span><span class="tblock-label almoco">Almoço</span></div>
+        <div class="tblock"><span class="tblock-time">12:30 – 13:00</span><span class="tblock-label cardio">Cardio</span><span class="tblock-note">30 min — última sessão da semana antes do fim de semana</span></div>
+        <div class="tblock"><span class="tblock-time">13:00 – 15:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">15:00 – 15:15</span><span class="tblock-label lanche">Lanche</span></div>
+        <div class="tblock"><span class="tblock-time">15:15 – 17:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">17:00 – 18:00</span><span class="tblock-label descanso">Descompressão</span><span class="tblock-note">Série, jogo casual, vídeo — transição para o fim de semana. Sem estudo.</span></div>
+        <div class="tblock"><span class="tblock-time">18:00 – 19:00</span><span class="tblock-label concurso">Concurso</span><span class="tblock-note">1h apostilas ou questões — ritmo mais leve</span></div>
+        <div class="tblock"><span class="tblock-time">19:00+</span><span class="tblock-label livre">Livre — sexta à noite é sagrada</span></div>
+      </div>
+    </div>
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Sábado</span><span class="day-type fds">inglês fixo + rinha + concurso</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">07:15 – 08:00</span><span class="tblock-label treino">Treino</span><span class="tblock-note">45 min antes da aula — treino mais intenso da semana. Musculação, HIIT, corrida, ou academia.</span></div>
+        <div class="tblock"><span class="tblock-time">08:00 – 10:30</span><span class="tblock-label ingles">Inglês · aula</span><span class="tblock-note">Fixo e inegociável toda semana em todas as fases</span></div>
+        <div class="tblock"><span class="tblock-time">10:30 – 12:30</span><span class="tblock-label rinha">Rinha de Backend</span><span class="tblock-note">2h hiperfoco — aproveita o estado mental da manhã</span></div>
+        <div class="tblock"><span class="tblock-time">12:30 – 13:30</span><span class="tblock-label almoco">Almoço</span></div>
+        <div class="tblock"><span class="tblock-time">13:30 – 17:00</span><span class="tblock-label concurso">Concurso</span><span class="tblock-note">3,5h — maior bloco da semana. Últimas 2 semanas da Fase 1: inclui 30 min de redação aqui.</span></div>
+        <div class="tblock"><span class="tblock-time">17:00+</span><span class="tblock-label familia">Família / Lazer</span><span class="tblock-note">Cinema, restaurante, passeio — sem culpa e sem tela de estudo</span></div>
+      </div>
+    </div>
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Domingo</span><span class="day-type fds">recarga + investimentos</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">até 09:00</span><span class="tblock-label sono">Dormir bem — sem alarme</span></div>
+        <div class="tblock"><span class="tblock-time">09:00 – 09:15</span><span class="tblock-label checkin">Check-in semanal</span><span class="tblock-note">15 min: horas estudadas, o que cobriu no TCC, o que cobre na semana seguinte</span></div>
+        <div class="tblock"><span class="tblock-time">09:15 – 11:15</span><span class="tblock-label invest">Investimentos · Sessão 1</span><span class="tblock-note">Diagnóstico dos CDBs: listar todos, taxas, vencimentos, cobertura FGC</span></div>
+        <div class="tblock"><span class="tblock-time">11:15 – 12:15</span><span class="tblock-label rinha">Rinha de Backend</span><span class="tblock-note">1h sprint final — última funcionalidade ou correção</span></div>
+        <div class="tblock"><span class="tblock-time">12:15 – 13:15</span><span class="tblock-label treino">Treino</span><span class="tblock-note">1h — caminhada longa, yoga, ou qualquer atividade que aprecie</span></div>
+        <div class="tblock"><span class="tblock-time">13:15+</span><span class="tblock-label livre">Descanso total · família</span><span class="tblock-note">Jogo, série, almoço em família — recarrega para a semana</span></div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <strong>⚡ Fase 1 resumo:</strong> Exercício 7 dias (mobilidade seg/qua + cardio ter/qui/sex + treino sáb/dom) · TCC 1,5h/semana (leitura) · Concurso ~15h · Rinha ~5h · Inglês 2,5h · Invest S1 domingo.
+    </div>
+  </div>
+
+  <!-- ===== FASE 2 ===== -->
+  <div class="schedule-phase" id="f2">
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Segunda / Quarta</span><span class="day-type presencial">presencial · dia pesado</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">06:00 – 06:20</span><span class="tblock-label mobilidade">Mobilidade</span><span class="tblock-note">20 min — alongamento, mobilidade articular. Mantém a disciplina mesmo sem tempo.</span></div>
+        <div class="tblock"><span class="tblock-time">06:20 – 06:30</span><span class="tblock-label pausa">Preparo saída</span></div>
+        <div class="tblock"><span class="tblock-time">06:30 – 08:00</span><span class="tblock-label concurso">Concurso passivo</span><span class="tblock-note">Áudio das aulas no trajeto — material de menor densidade cognitiva</span></div>
+        <div class="tblock"><span class="tblock-time">08:00 – 10:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">10:00 – 10:15</span><span class="tblock-label lanche">Lanche</span></div>
+        <div class="tblock"><span class="tblock-time">10:15 – 12:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">12:00 – 13:00</span><span class="tblock-label almoco">Almoço</span></div>
+        <div class="tblock"><span class="tblock-time">13:00 – 15:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">15:00 – 15:15</span><span class="tblock-label lanche">Lanche</span></div>
+        <div class="tblock"><span class="tblock-time">15:15 – 17:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">17:00 – 19:30</span><span class="tblock-label trajeto">Trajeto volta</span><span class="tblock-note">Descompressão: música, podcast de entretenimento, ou silêncio. Não é estudo.</span></div>
+        <div class="tblock"><span class="tblock-time">19:30 – 20:15</span><span class="tblock-label almoco">Jantar tranquilo</span></div>
+        <div class="tblock"><span class="tblock-time">20:15 – 21:15</span><span class="tblock-label concurso">Concurso</span><span class="tblock-note">1h — apostilas ou revisão leve. Nos últimos 15 dias: redação dissertativo-argumentativa.</span></div>
+        <div class="tblock"><span class="tblock-time">21:15+</span><span class="tblock-label sono">Descanso</span></div>
+      </div>
+    </div>
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Terça / Quinta</span><span class="day-type home">home office · bloco principal</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">07:00 – 07:30</span><span class="tblock-label tcc">TCC · leitura</span><span class="tblock-note">30 min fichamento — continua acumulando referências para a Fase 3</span></div>
+        <div class="tblock"><span class="tblock-time">07:30 – 08:00</span><span class="tblock-label concurso">Concurso</span><span class="tblock-note">30 min vídeo-aulas</span></div>
+        <div class="tblock"><span class="tblock-time">08:00 – 10:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">10:00 – 10:15</span><span class="tblock-label lanche">Lanche</span><span class="tblock-note">+ checar B3 (mercado aberto) — máx 5 min, sem deixar virar distração</span></div>
+        <div class="tblock"><span class="tblock-time">10:15 – 12:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">12:00 – 12:30</span><span class="tblock-label almoco">Almoço</span></div>
+        <div class="tblock"><span class="tblock-time">12:30 – 13:00</span><span class="tblock-label cardio">Cardio</span><span class="tblock-note">30 min — caminhada, ciclismo, pular corda, HIIT leve. Não precisa sair de casa.</span></div>
+        <div class="tblock"><span class="tblock-time">13:00 – 15:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">15:00 – 15:15</span><span class="tblock-label lanche">Lanche</span><span class="tblock-note">+ checar B3 se necessário</span></div>
+        <div class="tblock"><span class="tblock-time">15:15 – 17:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">17:00 – 17:20</span><span class="tblock-label pausa">Pausa obrigatória</span><span class="tblock-note">Levanta, água, ar fresco. Transição entre modos de atenção.</span></div>
+        <div class="tblock"><span class="tblock-time">17:20 – 20:00</span><span class="tblock-label concurso">Concurso</span><span class="tblock-note">2,5h — vídeo-aulas ou apostilas. Últimos 15 dias: 1h redação + 1,5h questões.</span></div>
+        <div class="tblock"><span class="tblock-time">20:00 – 21:00</span><span class="tblock-label livre">Livre</span><span class="tblock-note">1h jogo, série, YouTube — recuperação mental. Não é preguiça, é necessário.</span></div>
+        <div class="tblock"><span class="tblock-time">21:00+</span><span class="tblock-label sono">Descanso</span></div>
+      </div>
+    </div>
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Sexta</span><span class="day-type home">home office</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">07:00 – 07:30</span><span class="tblock-label tcc">TCC · leitura</span><span class="tblock-note">30 min — último fichamento da semana</span></div>
+        <div class="tblock"><span class="tblock-time">07:30 – 08:00</span><span class="tblock-label concurso">Concurso</span><span class="tblock-note">30 min revisão rápida</span></div>
+        <div class="tblock"><span class="tblock-time">08:00 – 10:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">10:00 – 10:15</span><span class="tblock-label lanche">Lanche</span></div>
+        <div class="tblock"><span class="tblock-time">10:15 – 12:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">12:00 – 12:30</span><span class="tblock-label almoco">Almoço</span></div>
+        <div class="tblock"><span class="tblock-time">12:30 – 13:00</span><span class="tblock-label cardio">Cardio</span><span class="tblock-note">30 min — encerra o ciclo de cardio da semana</span></div>
+        <div class="tblock"><span class="tblock-time">13:00 – 15:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">15:00 – 15:15</span><span class="tblock-label lanche">Lanche</span></div>
+        <div class="tblock"><span class="tblock-time">15:15 – 17:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">17:00 – 18:00</span><span class="tblock-label descanso">Descompressão</span><span class="tblock-note">Série, jogo casual, redes sociais. Transição real para o fim de semana.</span></div>
+        <div class="tblock"><span class="tblock-time">18:00 – 19:00</span><span class="tblock-label concurso">Concurso</span><span class="tblock-note">1h apostilas ou questões — ritmo mais leve que os outros dias</span></div>
+        <div class="tblock"><span class="tblock-time">19:00+</span><span class="tblock-label livre">Livre — sexta à noite é sagrada</span></div>
+      </div>
+    </div>
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Sábado</span><span class="day-type fds">inglês fixo + concurso + redação</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">07:15 – 08:00</span><span class="tblock-label treino">Treino intenso</span><span class="tblock-note">45 min — o treino mais forte da semana. Academia, HIIT, corrida. Endorfina antes da aula.</span></div>
+        <div class="tblock"><span class="tblock-time">08:00 – 10:30</span><span class="tblock-label ingles">Inglês · aula</span><span class="tblock-note">Fixo e inegociável</span></div>
+        <div class="tblock"><span class="tblock-time">10:30 – 12:00</span><span class="tblock-label redacao">Redação</span><span class="tblock-note">1,5h — ponto fraco, treina toda semana da Fase 2. Estrutura dissertativo-argumentativa fixa.</span></div>
+        <div class="tblock"><span class="tblock-time">12:00 – 13:00</span><span class="tblock-label almoco">Almoço</span></div>
+        <div class="tblock"><span class="tblock-time">13:00 – 17:00</span><span class="tblock-label concurso">Concurso</span><span class="tblock-note">4h — vídeo-aulas ou apostilas. Nos últimos 15 dias: 2h questões + 2h revisão.</span></div>
+        <div class="tblock"><span class="tblock-time">17:00+</span><span class="tblock-label familia">Família / Lazer</span></div>
+      </div>
+    </div>
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Domingo</span><span class="day-type fds">recarga + investimentos</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">até 09:00</span><span class="tblock-label sono">Dormir bem</span></div>
+        <div class="tblock"><span class="tblock-time">09:00 – 09:15</span><span class="tblock-label checkin">Check-in semanal</span><span class="tblock-note">Horas estudadas, conteúdo coberto, ajuste da próxima semana</span></div>
+        <div class="tblock"><span class="tblock-time">09:15 – 11:15</span><span class="tblock-label invest">Investimentos · Sessões 2–4</span><span class="tblock-note">S2: renda variável e ETFs · S3: montar carteira · S4: abrir corretora e executar</span></div>
+        <div class="tblock"><span class="tblock-time">11:15 – 12:15</span><span class="tblock-label concurso">Concurso</span><span class="tblock-note">1h revisão ou questões</span></div>
+        <div class="tblock"><span class="tblock-time">12:15 – 13:15</span><span class="tblock-label treino">Treino</span><span class="tblock-note">1h — caminhada longa, yoga, natação, ou qualquer atividade prazerosa</span></div>
+        <div class="tblock"><span class="tblock-time">13:15+</span><span class="tblock-label livre">Descanso total · família</span></div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <strong>📚 Fase 2 resumo:</strong> Rinha zerada · TCC 1,5h/semana (leitura) · Redação toda semana no sábado · Concurso ~17h/semana · Inglês 2,5h · Invest S2–S4 domingos · Exercício 7 dias.
+    </div>
+  </div>
+
+  <!-- ===== FASE 3 ===== -->
+  <div class="schedule-phase" id="f3">
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Segunda / Quarta</span><span class="day-type presencial">presencial</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">06:00 – 06:20</span><span class="tblock-label mobilidade">Mobilidade</span></div>
+        <div class="tblock"><span class="tblock-time">06:30 – 08:00</span><span class="tblock-label cert">Certificação passiva</span><span class="tblock-note">Áudio de aulas técnicas no trajeto</span></div>
+        <div class="tblock"><span class="tblock-time">08:00 – 10:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">10:00 – 10:15</span><span class="tblock-label lanche">Lanche</span></div>
+        <div class="tblock"><span class="tblock-time">10:15 – 12:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">12:00 – 13:00</span><span class="tblock-label almoco">Almoço</span></div>
+        <div class="tblock"><span class="tblock-time">13:00 – 15:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">15:00 – 15:15</span><span class="tblock-label lanche">Lanche</span></div>
+        <div class="tblock"><span class="tblock-time">15:15 – 17:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">17:00 – 19:30</span><span class="tblock-label trajeto">Trajeto volta</span><span class="tblock-note">Descompressão — podcast de entretenimento, música, silêncio</span></div>
+        <div class="tblock"><span class="tblock-time">19:30 – 20:15</span><span class="tblock-label almoco">Jantar</span></div>
+        <div class="tblock"><span class="tblock-time">20:15 – 21:45</span><span class="tblock-label tcc">TCC 2 · escrita</span><span class="tblock-note">1,5h — escrita ou pesquisa bibliográfica. Aproveita o acúmulo de fichamentos das Fases 1 e 2.</span></div>
+        <div class="tblock"><span class="tblock-time">21:45+</span><span class="tblock-label sono">Descanso</span></div>
+      </div>
+    </div>
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Terça / Quinta</span><span class="day-type home">home office · foco TCC</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">07:00 – 08:00</span><span class="tblock-label tcc">TCC 2 · escrita</span><span class="tblock-note">1h antes do trabalho — mente fresca é ouro para escrita acadêmica</span></div>
+        <div class="tblock"><span class="tblock-time">08:00 – 10:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">10:00 – 10:15</span><span class="tblock-label lanche">Lanche</span><span class="tblock-note">+ checar B3 rapidamente</span></div>
+        <div class="tblock"><span class="tblock-time">10:15 – 12:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">12:00 – 12:30</span><span class="tblock-label almoco">Almoço</span></div>
+        <div class="tblock"><span class="tblock-time">12:30 – 13:00</span><span class="tblock-label cardio">Cardio</span><span class="tblock-note">30 min — mantém a rotina de exercício diário</span></div>
+        <div class="tblock"><span class="tblock-time">13:00 – 15:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">15:00 – 15:15</span><span class="tblock-label lanche">Lanche</span></div>
+        <div class="tblock"><span class="tblock-time">15:15 – 17:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">17:00 – 17:20</span><span class="tblock-label pausa">Pausa</span></div>
+        <div class="tblock"><span class="tblock-time">17:20 – 19:20</span><span class="tblock-label tcc">TCC 2 · escrita</span><span class="tblock-note">2h bloco principal — capítulos, argumentação, revisão</span></div>
+        <div class="tblock"><span class="tblock-time">19:20 – 20:20</span><span class="tblock-label cert">Certificação</span><span class="tblock-note">1h vídeo-aulas ou projeto prático</span></div>
+        <div class="tblock"><span class="tblock-time">20:20+</span><span class="tblock-label livre">Livre / Descanso</span></div>
+      </div>
+    </div>
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Sexta</span><span class="day-type home">home office · ritmo leve</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">07:00 – 08:00</span><span class="tblock-label tcc">TCC 2 · revisão</span><span class="tblock-note">1h — revisão do que escreveu na semana, ajusta inconsistências</span></div>
+        <div class="tblock"><span class="tblock-time">08:00 – 10:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">10:00 – 10:15</span><span class="tblock-label lanche">Lanche</span></div>
+        <div class="tblock"><span class="tblock-time">10:15 – 12:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">12:00 – 12:30</span><span class="tblock-label almoco">Almoço</span></div>
+        <div class="tblock"><span class="tblock-time">12:30 – 13:00</span><span class="tblock-label cardio">Cardio</span></div>
+        <div class="tblock"><span class="tblock-time">13:00 – 15:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">15:00 – 15:15</span><span class="tblock-label lanche">Lanche</span></div>
+        <div class="tblock"><span class="tblock-time">15:15 – 17:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">17:00 – 18:00</span><span class="tblock-label cert">Certificação</span><span class="tblock-note">1h prática ou projeto simples</span></div>
+        <div class="tblock"><span class="tblock-time">18:00+</span><span class="tblock-label livre">Livre — sexta é sagrada</span></div>
+      </div>
+    </div>
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Sábado</span><span class="day-type fds">inglês fixo + TCC</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">07:15 – 08:00</span><span class="tblock-label treino">Treino intenso</span><span class="tblock-note">45 min antes da aula</span></div>
+        <div class="tblock"><span class="tblock-time">08:00 – 10:30</span><span class="tblock-label ingles">Inglês · aula</span><span class="tblock-note">Fixo e inegociável</span></div>
+        <div class="tblock"><span class="tblock-time">10:30 – 12:00</span><span class="tblock-label ingles">Inglês · dever de casa</span><span class="tblock-note">1,5h — aproveita que está no ritmo do idioma</span></div>
+        <div class="tblock"><span class="tblock-time">12:00 – 13:00</span><span class="tblock-label almoco">Almoço</span></div>
+        <div class="tblock"><span class="tblock-time">13:00 – 16:00</span><span class="tblock-label tcc">TCC 2 · escrita</span><span class="tblock-note">3h — maior bloco semanal do TCC. Meta: capítulo completo por semana.</span></div>
+        <div class="tblock"><span class="tblock-time">16:00+</span><span class="tblock-label familia">Família / Lazer</span></div>
+      </div>
+    </div>
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Domingo</span><span class="day-type fds">recarga leve</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">até 10:00</span><span class="tblock-label sono">Dormir bem</span></div>
+        <div class="tblock"><span class="tblock-time">10:00 – 10:15</span><span class="tblock-label checkin">Check-in semanal</span></div>
+        <div class="tblock"><span class="tblock-time">10:15 – 10:30</span><span class="tblock-label invest">Investimentos · manutenção</span><span class="tblock-note">15 min — Kinvo, revisar carteira, rebalancear se necessário</span></div>
+        <div class="tblock"><span class="tblock-time">10:30 – 11:30</span><span class="tblock-label treino">Treino</span><span class="tblock-note">1h — atividade prazerosa, não obrigatoriamente intensa</span></div>
+        <div class="tblock"><span class="tblock-time">11:30+</span><span class="tblock-label livre">Descanso total · família</span></div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <strong>🧠 Meta Fase 3:</strong> Chegar em 10/08 com intro + referencial + metodologia escritos (~30h TCC). Certificações voltam em 2–3h/semana. Exercício diário mantido.
+    </div>
+  </div>
+
+  <!-- ===== FASE 4 ===== -->
+  <div class="schedule-phase" id="f4">
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Segunda / Quarta</span><span class="day-type presencial">presencial</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">06:00 – 06:20</span><span class="tblock-label mobilidade">Mobilidade</span></div>
+        <div class="tblock"><span class="tblock-time">06:30 – 08:00</span><span class="tblock-label cert">Certificação passiva</span><span class="tblock-note">Áudio técnico no trajeto</span></div>
+        <div class="tblock"><span class="tblock-time">08:00 – 10:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">10:00 – 10:15</span><span class="tblock-label lanche">Lanche</span></div>
+        <div class="tblock"><span class="tblock-time">10:15 – 12:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">12:00 – 13:00</span><span class="tblock-label almoco">Almoço</span></div>
+        <div class="tblock"><span class="tblock-time">13:00 – 15:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">15:00 – 15:15</span><span class="tblock-label lanche">Lanche</span></div>
+        <div class="tblock"><span class="tblock-time">15:15 – 17:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">17:00 – 19:30</span><span class="tblock-label trajeto">Trajeto volta</span><span class="tblock-note">Descompressão — sem estudo pesado</span></div>
+        <div class="tblock"><span class="tblock-time">19:30 – 20:15</span><span class="tblock-label almoco">Jantar</span></div>
+        <div class="tblock"><span class="tblock-time">20:15 – 21:45</span><span class="tblock-label tcc">TCC 2 · escrita</span><span class="tblock-note">1,5h revisão ou escrita — ritmo sustentável para 18 semanas</span></div>
+        <div class="tblock"><span class="tblock-time">21:45+</span><span class="tblock-label sono">Descanso</span></div>
+      </div>
+    </div>
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Terça / Quinta</span><span class="day-type home">home office · foco duplo</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">07:00 – 08:00</span><span class="tblock-label tcc">TCC 2 · escrita</span><span class="tblock-note">1h matutina — capítulos finais, análise de dados, discussão</span></div>
+        <div class="tblock"><span class="tblock-time">08:00 – 10:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">10:00 – 10:15</span><span class="tblock-label lanche">Lanche</span><span class="tblock-note">+ checar B3 rapidamente</span></div>
+        <div class="tblock"><span class="tblock-time">10:15 – 12:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">12:00 – 12:30</span><span class="tblock-label almoco">Almoço</span></div>
+        <div class="tblock"><span class="tblock-time">12:30 – 13:00</span><span class="tblock-label cardio">Cardio</span></div>
+        <div class="tblock"><span class="tblock-time">13:00 – 15:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">15:00 – 15:15</span><span class="tblock-label lanche">Lanche</span></div>
+        <div class="tblock"><span class="tblock-time">15:15 – 17:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">17:00 – 19:00</span><span class="tblock-label tcc">TCC 2 · escrita</span><span class="tblock-note">2h bloco principal</span></div>
+        <div class="tblock"><span class="tblock-time">19:00 – 20:00</span><span class="tblock-label cert">Certificação</span><span class="tblock-note">1h vídeo-aulas ou prática</span></div>
+        <div class="tblock"><span class="tblock-time">20:00+</span><span class="tblock-label livre">Livre</span></div>
+      </div>
+    </div>
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Sexta</span><span class="day-type home">home office</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">07:00 – 08:00</span><span class="tblock-label tcc">TCC 2 · revisão semanal</span><span class="tblock-note">1h — revisão do orientador, ajustes, coerência do capítulo</span></div>
+        <div class="tblock"><span class="tblock-time">08:00 – 10:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">10:00 – 10:15</span><span class="tblock-label lanche">Lanche</span></div>
+        <div class="tblock"><span class="tblock-time">10:15 – 12:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">12:00 – 12:30</span><span class="tblock-label almoco">Almoço</span></div>
+        <div class="tblock"><span class="tblock-time">12:30 – 13:00</span><span class="tblock-label cardio">Cardio</span></div>
+        <div class="tblock"><span class="tblock-time">13:00 – 15:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">15:00 – 15:15</span><span class="tblock-label lanche">Lanche</span></div>
+        <div class="tblock"><span class="tblock-time">15:15 – 17:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">17:00 – 18:00</span><span class="tblock-label cert">Certificação</span></div>
+        <div class="tblock"><span class="tblock-time">18:00+</span><span class="tblock-label livre">Livre — sexta é sagrada</span></div>
+      </div>
+    </div>
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Sábado</span><span class="day-type fds">inglês fixo + TCC</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">07:15 – 08:00</span><span class="tblock-label treino">Treino intenso</span><span class="tblock-note">45 min antes da aula</span></div>
+        <div class="tblock"><span class="tblock-time">08:00 – 10:30</span><span class="tblock-label ingles">Inglês · aula</span><span class="tblock-note">Fixo e inegociável</span></div>
+        <div class="tblock"><span class="tblock-time">10:30 – 12:00</span><span class="tblock-label ingles">Inglês · dever de casa</span></div>
+        <div class="tblock"><span class="tblock-time">12:00 – 13:00</span><span class="tblock-label almoco">Almoço</span></div>
+        <div class="tblock"><span class="tblock-time">13:00 – 15:30</span><span class="tblock-label tcc">TCC 2 · escrita</span><span class="tblock-note">2,5h — revisão de capítulos, incorpora feedback do orientador</span></div>
+        <div class="tblock"><span class="tblock-time">15:30+</span><span class="tblock-label familia">Família / Lazer</span></div>
+      </div>
+    </div>
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Domingo</span><span class="day-type fds">recarga</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">até 09:00</span><span class="tblock-label sono">Dormir bem</span></div>
+        <div class="tblock"><span class="tblock-time">09:00 – 09:15</span><span class="tblock-label checkin">Check-in semanal</span></div>
+        <div class="tblock"><span class="tblock-time">09:15 – 09:30</span><span class="tblock-label invest">Investimentos · manutenção</span><span class="tblock-note">15 min — revisar carteira no Kinvo</span></div>
+        <div class="tblock"><span class="tblock-time">09:30 – 10:30</span><span class="tblock-label tcc">TCC 2 · revisão leve</span><span class="tblock-note">1h — relê o capítulo da semana, anota melhorias</span></div>
+        <div class="tblock"><span class="tblock-time">10:30 – 11:30</span><span class="tblock-label treino">Treino</span></div>
+        <div class="tblock"><span class="tblock-time">11:30+</span><span class="tblock-label livre">Descanso total · família</span></div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <strong>🎓 Meta Fase 4:</strong> ~5h/semana TCC = ~90h em 18 semanas. Com a base da Fase 3, sobra tempo para revisão completa antes da apresentação.
+    </div>
+  </div>
+
+  <!-- ===== FASE 5 ===== -->
+  <div class="schedule-phase" id="f5">
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Segunda / Quarta</span><span class="day-type presencial">presencial</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">06:00 – 06:20</span><span class="tblock-label mobilidade">Mobilidade</span></div>
+        <div class="tblock"><span class="tblock-time">06:30 – 08:00</span><span class="tblock-label cert">Certificação passiva</span><span class="tblock-note">Áudio técnico no trajeto</span></div>
+        <div class="tblock"><span class="tblock-time">08:00 – 10:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">10:00 – 10:15</span><span class="tblock-label lanche">Lanche</span><span class="tblock-note">+ checar B3</span></div>
+        <div class="tblock"><span class="tblock-time">10:15 – 12:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">12:00 – 13:00</span><span class="tblock-label almoco">Almoço</span></div>
+        <div class="tblock"><span class="tblock-time">13:00 – 15:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">15:00 – 15:15</span><span class="tblock-label lanche">Lanche</span></div>
+        <div class="tblock"><span class="tblock-time">15:15 – 17:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">17:00 – 19:30</span><span class="tblock-label trajeto">Trajeto volta</span><span class="tblock-note">Descompressão — podcast de entretenimento</span></div>
+        <div class="tblock"><span class="tblock-time">19:30 – 20:15</span><span class="tblock-label almoco">Jantar</span></div>
+        <div class="tblock"><span class="tblock-time">20:15 – 21:45</span><span class="tblock-label cert">Certificação</span><span class="tblock-note">1,5h estudo ou projeto prático</span></div>
+        <div class="tblock"><span class="tblock-time">21:45+</span><span class="tblock-label sono">Descanso</span></div>
+      </div>
+    </div>
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Terça / Quinta</span><span class="day-type home">home office · foco carreira</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">07:00 – 08:00</span><span class="tblock-label cert">Certificação</span><span class="tblock-note">1h vídeo-aulas ou simulado</span></div>
+        <div class="tblock"><span class="tblock-time">08:00 – 10:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">10:00 – 10:15</span><span class="tblock-label lanche">Lanche</span><span class="tblock-note">+ checar B3 — mais atenção nessa fase</span></div>
+        <div class="tblock"><span class="tblock-time">10:15 – 12:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">12:00 – 12:30</span><span class="tblock-label almoco">Almoço</span></div>
+        <div class="tblock"><span class="tblock-time">12:30 – 13:00</span><span class="tblock-label cardio">Cardio</span></div>
+        <div class="tblock"><span class="tblock-time">13:00 – 15:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">15:00 – 15:15</span><span class="tblock-label lanche">Lanche</span></div>
+        <div class="tblock"><span class="tblock-time">15:15 – 17:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">17:00 – 19:00</span><span class="tblock-label cert">Certificação</span><span class="tblock-note">2h projeto prático ou simulado</span></div>
+        <div class="tblock"><span class="tblock-time">19:00 – 20:00</span><span class="tblock-label afc">AFC</span><span class="tblock-note">1h features novas ou melhorias</span></div>
+        <div class="tblock"><span class="tblock-time">20:00+</span><span class="tblock-label livre">Livre</span></div>
+      </div>
+    </div>
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Sexta</span><span class="day-type home">home office · carreira internacional</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">07:00 – 08:00</span><span class="tblock-label cert">Certificação</span><span class="tblock-note">1h revisão da semana</span></div>
+        <div class="tblock"><span class="tblock-time">08:00 – 10:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">10:00 – 10:15</span><span class="tblock-label lanche">Lanche</span></div>
+        <div class="tblock"><span class="tblock-time">10:15 – 12:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">12:00 – 12:30</span><span class="tblock-label almoco">Almoço</span></div>
+        <div class="tblock"><span class="tblock-time">12:30 – 13:00</span><span class="tblock-label cardio">Cardio</span></div>
+        <div class="tblock"><span class="tblock-time">13:00 – 15:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">15:00 – 15:15</span><span class="tblock-label lanche">Lanche</span></div>
+        <div class="tblock"><span class="tblock-time">15:15 – 17:00</span><span class="tblock-label trabalho">Trabalho</span></div>
+        <div class="tblock"><span class="tblock-time">17:00 – 18:30</span><span class="tblock-label carreira">Carreira internacional</span><span class="tblock-note">LinkedIn em inglês, vagas, portfólio, network — foco no objetivo de trabalhar no exterior</span></div>
+        <div class="tblock"><span class="tblock-time">18:30+</span><span class="tblock-label livre">Livre — sexta é sagrada</span></div>
+      </div>
+    </div>
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Sábado</span><span class="day-type fds">inglês fixo + certificação</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">07:15 – 08:00</span><span class="tblock-label treino">Treino intenso</span></div>
+        <div class="tblock"><span class="tblock-time">08:00 – 10:30</span><span class="tblock-label ingles">Inglês · aula</span><span class="tblock-note">Fixo e inegociável</span></div>
+        <div class="tblock"><span class="tblock-time">10:30 – 12:00</span><span class="tblock-label ingles">Inglês · conversação / dever</span><span class="tblock-note">Intensifica nessa fase — foco em fluência para entrevistas</span></div>
+        <div class="tblock"><span class="tblock-time">12:00 – 13:00</span><span class="tblock-label almoco">Almoço</span></div>
+        <div class="tblock"><span class="tblock-time">13:00 – 15:30</span><span class="tblock-label cert">Certificação</span><span class="tblock-note">2,5h simulado ou projeto</span></div>
+        <div class="tblock"><span class="tblock-time">15:30 – 17:00</span><span class="tblock-label afc">AFC</span><span class="tblock-note">1,5h features ou melhorias de UX</span></div>
+        <div class="tblock"><span class="tblock-time">17:00+</span><span class="tblock-label familia">Família / Lazer</span></div>
+      </div>
+    </div>
+
+    <div class="schedule-day">
+      <div class="day-header"><span class="day-name">Domingo</span><span class="day-type fds">recarga</span></div>
+      <div class="time-blocks">
+        <div class="tblock"><span class="tblock-time">até 09:00</span><span class="tblock-label sono">Dormir bem</span></div>
+        <div class="tblock"><span class="tblock-time">09:00 – 09:15</span><span class="tblock-label checkin">Check-in semanal</span></div>
+        <div class="tblock"><span class="tblock-time">09:15 – 09:30</span><span class="tblock-label invest">Investimentos · manutenção</span><span class="tblock-note">15–30 min — revisar, rebalancear, oportunidades</span></div>
+        <div class="tblock"><span class="tblock-time">09:30 – 11:00</span><span class="tblock-label carreira">Carreira internacional</span><span class="tblock-note">Aplicações, prep entrevistas em inglês, network</span></div>
+        <div class="tblock"><span class="tblock-time">11:00 – 12:00</span><span class="tblock-label treino">Treino<</span></div>
+        <div class="tblock"><span class="tblock-time">12:00+</span><span class="tblock-label livre">Descanso total · família</span></div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <strong>🌍 Fase 5 — convergência:</strong> TCC entregue, certificações em foco total, inglês para entrevistas, AFC recebe atenção, investimentos no automático. É o momento de colher o que plantou em 2026.
+    </div>
+  </div>
+</section>
+
+<!-- ESTRATÉGIAS DE IMPREVISTO -->
+<section>
+  <div class="section-title">Estratégias de adaptação a imprevistos</div>
+  <div class="contingency-grid">
+    <div class="cont-card">
+      <h4><span class="cont-badge red">LOGÍSTICA</span> Ônibus quebrou / dia presencial perdido</h4>
+      <div class="cont-items">
+        <div class="cont-item"><strong>Não tenta compensar à noite.</strong> Você vai chegar ainda mais cansado. Um dia perdido não justifica forçar o cérebro exausto.</div>
+        <div class="cont-item"><strong>Protocolo:</strong> anota no check-in de domingo o que perdeu. Usa o próximo sábado como dia de reforço se necessário.</div>
+        <div class="cont-item"><strong>Regra mental:</strong> 1 dia perdido não vira avalanche de culpa. A semana seguinte recomeça do zero.</div>
+      </div>
+    </div>
+    <div class="cont-card">
+      <h4><span class="cont-badge yellow">CONTEÚDO</span> Acúmulo no concurso / ficou para trás</h4>
+      <div class="cont-items">
+        <div class="cont-item"><strong>Protocolo de revisão:</strong> domingo é sempre revisão do que acumulou — nunca pula para frente com lacunas abertas.</div>
+        <div class="cont-item">Se estiver <strong>mais de 2 semanas atrasado:</strong> pausa questões, volta para os vídeos. Prioridade é fechar o conteúdo.</div>
+        <div class="cont-item"><strong>Nas 2 semanas finais:</strong> o que não foi visto vira leitura rápida de apostila. Cobertura superficial é melhor que um buraco.</div>
+      </div>
+    </div>
+    <div class="cont-card">
+      <h4><span class="cont-badge purple">PONTO FRACO</span> Redação — atenção especial</h4>
+      <div class="cont-items">
+        <div class="cont-item"><strong>Fase 1:</strong> 1 redação/semana no sábado após o inglês. Estrutura dissertativo-argumentativa fixa.</div>
+        <div class="cont-item"><strong>Fase 2:</strong> 2 redações/semana nas últimas 3 semanas (sábado + uma noite de ter/qui).</div>
+        <div class="cont-item"><strong>Estratégia:</strong> temas recorrentes (segurança, educação, meio ambiente, tecnologia). Cronometra sempre — 60 minutos por redação.</div>
+        <div class="cont-item">Estrutura fixa: <strong>introdução com tese → 2 parágrafos de desenvolvimento → conclusão com proposta de intervenção.</strong> Não reinventa a roda.</div>
+      </div>
+    </div>
+    <div class="cont-card">
+      <h4><span class="cont-badge blue">TDAH</span> Semana de pouco foco / bad week</h4>
+      <div class="cont-items">
+        <div class="cont-item"><strong>Aceita e não luta contra.</strong> Reduz para 50% do planejado — é melhor que 0%.</div>
+        <div class="cont-item"><strong>Não cancela</strong> compromissos externos: inglês, consultas médicas.</div>
+        <div class="cont-item">Foca no mais fácil: <strong>leitura passiva</strong> (áudio, apostilas) substitui estudo ativo nas bad weeks.</div>
+        <div class="cont-item"><strong>Exercício é prioridade nessas semanas</strong> — 20 min de cardio mudam o estado neurológico mais do que força de vontade.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INVEST SESSIONS -->
+<section>
+  <div class="section-title">Plano de investimentos · 4 domingos</div>
+  <div class="invest-sessions">
+    <div class="isession"><span class="isession-num">S1</span><div class="isession-content"><h4>Diagnóstico dos CDBs atuais</h4><p>Liste todos: banco, taxa, vencimento, valor. Verifique FGC (R$250k/inst.). Identifique quais vencem em 6–12 meses — esses vai realocar.</p></div></div>
+    <div class="isession"><span class="isession-num">S2</span><div class="isession-content"><h4>Renda variável: B3, ETFs e ações</h4><p>ETFs são o ponto de entrada (BOVA11, IVVB11). Entenda corretagem, custódia, IR. Marque vencimentos dos CDBs no calendário.</p></div></div>
+    <div class="isession"><span class="isession-num">S3</span><div class="isession-content"><h4>Montando a carteira por objetivos</h4><p>Reserva emergência (CDB/Selic), médio e longo prazo. Intermediário: 60–70% renda fixa, 20–30% variável (ETFs), 5–10% internacional (IVVB11 — alinhado ao objetivo exterior).</p></div></div>
+    <div class="isession"><span class="isession-num">S4</span><div class="isession-content"><h4>Decisão e execução</h4><p>Abre conta (Clear/Rico, taxa zero). Primeira compra de ETF. Aporte mensal fixo. Instala Kinvo. A partir daí: 15 min/semana de manutenção.</p></div></div>
+  </div>
+  <div class="tools-grid">
+    <div class="tool-card"><h4>📱 Ferramentas · B3 aberta das 10h–17h</h4><p><strong>Kinvo</strong> — gestão · <strong>Status Invest</strong> — análise · <strong>Clear/Rico</strong> — taxa zero · <strong>IVVB11</strong> — ETF dolarizado. Monitoramento rápido nos lanches das 10h e 15h nos dias de home office.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">O que pausar e por quanto tempo</div>
+  <div class="sacrifice-list">
+    <div class="sacrifice-item"><span class="sacrifice-icon">⏸️</span><span class="sacrifice-text"><strong>Certificações</strong> — pausadas até 06/07. Retomam na Fase 3, foco total na Fase 5.</span></div>
+    <div class="sacrifice-item"><span class="sacrifice-icon">⏸️</span><span class="sacrifice-text"><strong>AFC</strong> — só bugs críticos até dezembro. Features novas na Fase 5.</span></div>
+    <div class="sacrifice-item"><span class="sacrifice-icon">📺</span><span class="sacrifice-text"><strong>YouTube / Jogos</strong> — 1h nas noites de ter e qui (Fase 2) e fins de semana. Não elimina: é saúde mental.</span></div>
+    <div class="sacrifice-item"><span class="sacrifice-icon">🛏️</span><span class="sacrifice-text"><strong>Sono — nunca sacrifica.</strong> Com TDAH e psoríase, noite ruim = dia perdido.</span></div>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">Estratégias TDAH + hiperfoco + exercício</div>
+  <div class="tips">
+    <div class="tip"><strong>Exercício diário é o âncora da rotina.</strong> Mobilidade seg/qua (20 min), cardio ter/qui/sex (30 min no almoço), treino intenso sáb (45 min) e dom (1h). Não é luxo — é o que sustenta 6 meses de disciplina com TDAH e psoríase.</div>
+    <div class="tip"><strong>Descompressão é definida.</strong> Trajeto de volta: música, podcast de entretenimento, ou silêncio. Em casa: série, jogo casual, redes sociais. Sem isso, a qualidade do estudo seguinte cai.</div>
+    <div class="tip"><strong>Ritual de entrada.</strong> Fecha abas, coloca fone (lofi ou silêncio), abre só o material. 2 minutos de ritual treinam o hiperfoco.</div>
+    <div class="tip"><strong>Regra do "só começa".</strong> 10 minutos de compromisso. Com TDAH, a barreira é sempre iniciar. Quase sempre continua depois.</div>
+    <div class="tip"><strong>TCC: escreva feio primeiro.</strong> Fases 1 e 2: acumula fichamentos. Fase 3: escreve. Rascunho ruim > página em branco perfeita.</div>
+    <div class="tip"><strong>Check-in de domingo — 15 min.</strong> Horas estudadas, TCC, o que cobriu, ajuste da semana. Evita o sumiço clássico do TDAH.</div>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">Saúde — inegociável</div>
+  <div class="tips">
+    <div class="tip"><strong>Exercício diário</strong> — controla psoríase, melhora foco TDAH, reduz cortisol de estresse. As 7 sessões semanais são a base de tudo.</div>
+    <div class="tip"><strong>Consultas:</strong> psicológica e dermatológica ficam no calendário. Dia de faculdade (1x/mês) = dia perdido — não compensa à noite.</div>
+  </div>
+</section>
+
+<div class="footer">planejamento final · 23 mai 2026 · revise todo domingo · 15 min</div>
+
+<script>
+function showPhase(id,el){
+  document.querySelectorAll('.schedule-phase').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.ptab').forEach(e=>e.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+function toggleTheme(){
+  const html=document.documentElement;
+  const btn=document.getElementById('theme-btn');
+  if(html.getAttribute('data-theme')==='light'){
+    html.removeAttribute('data-theme');
+    btn.textContent='☀ Tema claro';
+    localStorage.setItem('theme','dark');
+  } else {
+    html.setAttribute('data-theme','light');
+    btn.textContent='🌙 Tema escuro';
+    localStorage.setItem('theme','light');
+  }
+}
+// Restore saved theme
+(function(){
+  const saved=localStorage.getItem('theme');
+  const btn=document.getElementById('theme-btn');
+  if(saved==='light'){
+    document.documentElement.setAttribute('data-theme','light');
+    if(btn) btn.textContent='🌙 Tema escuro';
+  }
+})();
+</script>
+</body>
+</html>
