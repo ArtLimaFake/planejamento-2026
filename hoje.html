@@ -63,17 +63,23 @@ html,body{min-height:100vh;background:var(--bg);color:var(--text);font-family:'S
 .progress-fill{height:100%;background:var(--accent2);border-radius:3px;transition:width .4s ease;}
 
 /* day nav */
-.day-nav{display:flex;gap:6px;padding:12px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.week-label-row{padding:8px 16px 0;display:flex;justify-content:center;}
+.week-label{font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--muted);background:var(--surface2);padding:3px 12px;border-radius:20px;border:1px solid var(--border);}
+.day-nav{display:flex;gap:5px;padding:8px 16px 12px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;align-items:center;}
 .day-nav::-webkit-scrollbar{display:none;}
+.week-nav-btn{flex-shrink:0;width:28px;height:44px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;}
+.week-nav-btn:active{background:var(--surface2);}
 .day-pill{
-  flex-shrink:0;padding:5px 12px;border-radius:20px;
+  flex-shrink:0;padding:5px 10px;border-radius:10px;
   font-family:'Space Mono',monospace;font-size:0.65rem;cursor:pointer;
   border:1px solid var(--border);background:var(--surface);color:var(--muted);
-  transition:all .15s;
+  transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:1px;min-width:40px;
 }
 .day-pill.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700;}
 .day-pill.today{border-color:var(--accent2);color:var(--accent2);}
 .day-pill.today.active{background:var(--accent);color:#000;border-color:var(--accent);}
+.pill-name{font-size:0.65rem;font-weight:700;}
+.pill-date{font-size:0.58rem;opacity:0.75;}
 
 /* blocks list */
 .blocks{padding:0 16px 100px;}
@@ -254,6 +260,7 @@ html,body{min-height:100vh;background:var(--bg);color:var(--text);font-family:'S
   <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
 </div>
 
+<div class="week-label-row"><span id="week-label" class="week-label">Semana atual</span></div>
 <div class="day-nav" id="day-nav"></div>
 
 <div class="blocks" id="blocks-list"></div>
@@ -629,6 +636,7 @@ const MONTH_BR = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','n
 
 let currentPhase = 'f1';
 let selectedDay = 'seg';
+let weekOffset = 0; // 0 = current week, 1 = next week, -1 = last week
 let openBlockIdx = null;
 let statuses = {};
 
@@ -677,22 +685,64 @@ function formatDate(d){
 let currentDateStr = '';
 let currentDayCode = '';
 
+function getDateForDay(dayCode, wOffset){
+  const today = new Date();
+  const JS_DOW = {seg:1,ter:2,qua:3,qui:4,sex:5,sab:6,dom:0};
+  const toMon = d => (d + 6) % 7;
+  const todayMon = toMon(today.getDay());
+  const selMon = toMon(JS_DOW[dayCode]);
+  const diff = selMon - todayMon + (wOffset * 7);
+  const d = new Date(today);
+  d.setDate(today.getDate() + diff);
+  return d;
+}
+
 function renderDayNav(phase){
   const nav = document.getElementById('day-nav');
   const today = new Date();
+  const todayStr = toDateStr(today);
   const todayCode = JS_DAY_MAP[today.getDay()];
   const days = Object.values(WEEK_MAP[phase]).flat();
   const unique = [...new Set(days)];
   const order = ['seg','ter','qua','qui','sex','sab','dom'];
   const sorted = order.filter(d=>unique.includes(d));
+
   nav.innerHTML = '';
+
+  // prev week button
+  const prev = document.createElement('div');
+  prev.className = 'week-nav-btn';
+  prev.textContent = '‹';
+  prev.title = 'Semana anterior';
+  prev.onclick = ()=>{ weekOffset--; renderAll(); };
+  nav.appendChild(prev);
+
   sorted.forEach(d=>{
+    const dayDate = getDateForDay(d, weekOffset);
+    const dayDateStr = toDateStr(dayDate);
+    const isToday = dayDateStr === todayStr;
     const pill = document.createElement('div');
-    pill.className = 'day-pill' + (d===selectedDay?' active':'') + (d===todayCode?' today':'');
-    pill.textContent = DAY_LABELS[d];
+    pill.className = 'day-pill' + (d===selectedDay?' active':'') + (isToday?' today':'');
+    pill.innerHTML = `<span class="pill-name">${DAY_LABELS[d]}</span><span class="pill-date">${dayDate.getDate()}/${dayDate.getMonth()+1}</span>`;
     pill.onclick = ()=>{ selectedDay=d; renderAll(); };
     nav.appendChild(pill);
   });
+
+  // next week button
+  const next = document.createElement('div');
+  next.className = 'week-nav-btn';
+  next.textContent = '›';
+  next.title = 'Próxima semana';
+  next.onclick = ()=>{ weekOffset++; renderAll(); };
+  nav.appendChild(next);
+
+  // week label
+  const weekLabel = document.getElementById('week-label');
+  if(weekOffset===0) weekLabel.textContent = 'Semana atual';
+  else if(weekOffset===1) weekLabel.textContent = 'Próxima semana';
+  else if(weekOffset===-1) weekLabel.textContent = 'Semana passada';
+  else if(weekOffset>0) weekLabel.textContent = `+${weekOffset} semanas`;
+  else weekLabel.textContent = `${weekOffset} semanas`;
 }
 
 function renderBlocks(){
@@ -754,13 +804,8 @@ function renderAll(){
     selectedDay = JS_DAY_MAP[today.getDay()];
   }
 
-  // compute which actual date selectedDay refers to (within current week)
-  const dow = today.getDay(); // 0=sun..6=sat
-  const todayCode = JS_DAY_MAP[dow];
-  const order = ['dom','seg','ter','qua','qui','sex','sab'];
-  const diff = order.indexOf(selectedDay) - order.indexOf(todayCode);
-  const selDate = new Date(today);
-  selDate.setDate(today.getDate()+diff);
+  // compute which actual date selectedDay refers to, considering weekOffset
+  const selDate = getDateForDay(selectedDay, weekOffset);
   currentDateStr = toDateStr(selDate);
   currentDayCode = selectedDay;
 
@@ -854,9 +899,9 @@ function tickClock(){
   const mm = String(now.getMinutes()).padStart(2,'0');
   document.getElementById('clock-time').textContent = hh+':'+mm;
 
-  // only show current block if viewing today
-  const todayCode = JS_DAY_MAP[new Date().getDay()];
-  if(selectedDay !== todayCode){ 
+  // only show current block if viewing today (same date, not just same weekday)
+  const todayStr2 = toDateStr(new Date());
+  if(currentDateStr !== todayStr2){ 
     document.getElementById('clock-current').textContent='';
     document.getElementById('clock-next').textContent='';
     return;
